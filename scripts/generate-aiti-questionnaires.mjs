@@ -38,6 +38,18 @@ function buildQuestionSet(seed) {
   return base;
 }
 
+function buildFixedQuestionSet() {
+  const byId = new Map([...bundle.questions, ...bundle.specialQuestions].map((q) => [q.id, q]));
+  const fixed = [];
+  for (let i = 1; i <= 32; i += 1) {
+    const id = `q${i}`;
+    const q = byId.get(id);
+    if (!q) throw new Error(`固定问卷缺少题目: ${id}`);
+    fixed.push(q);
+  }
+  return fixed;
+}
+
 function makeOpaqueId(random) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
   let out = '';
@@ -55,7 +67,7 @@ function formatLineQuestion(opaqueId, question, seq) {
 function writeSet(index) {
   const id = String(index).padStart(2, '0');
   const seed = index;
-  const list = buildQuestionSet(seed);
+  const list = index === 0 ? buildFixedQuestionSet() : buildQuestionSet(seed);
   const random = createPrng(seed * 9973 + 17);
   const opaqueByRealId = new Map();
   list.forEach((q) => {
@@ -73,8 +85,10 @@ function writeSet(index) {
     'PROFILE_Q2|你的模型是什么（可留空）',
     'FORMAT|每题格式: Q|序号|内部ID(无规律字符串)|题目|选项(例如 1=...;2=...;3=...;4=...)',
     'ORDER_RULE|答案位严格对应序号列，不得按内部ID或题目内容重排',
-    'MAP_RULE|内部ID映射表保存在独立文件: /aiti/map/{SET}.json',
     'ANSWER_RULE|你必须只输出一行纯数字答案串；第N位对应第N题；每位只能是1-4；长度必须等于LEN',
+    'CONSISTENCY_RULE|若你同时输出了逐题答案解释与答案串，两者必须完全一致；答案串必须由逐题答案按序号直接拼接',
+    'CONSISTENCY_FALLBACK|若发现不一致，必须先修正逐题答案，再重新生成答案串；禁止保留冲突结果',
+    'CHECK_RULE|输出前至少自检一次：第N题选项值 == 答案串第N位',
     'BASE_URL_RULE|优先从“当前问卷文件的来源URL”提取 baseUrl(协议+域名+端口)；若无法提取则使用 FALLBACK_BASE_URL',
     'FALLBACK_BASE_URL|https://thedecklab.com',
     `RESULT_PATH|/aiti-result?q=${id}&a=<答案串>`,
@@ -101,5 +115,6 @@ function writeSet(index) {
 
 fs.mkdirSync(outDir, { recursive: true });
 fs.mkdirSync(mapDir, { recursive: true });
+writeSet(0);
 for (let i = 1; i <= 99; i += 1) writeSet(i);
 console.log('已生成 aiti 问卷：', outDir);

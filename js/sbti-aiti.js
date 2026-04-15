@@ -11,13 +11,17 @@ const els = {
   respondentModelInput: document.getElementById('respondentModelInput'),
   openResultBtn: document.getElementById('openResultBtn'),
   resultUrl: document.getElementById('resultUrl'),
-  aiPromptTemplate: document.getElementById('aiPromptTemplate'),
+  promptModeShortBtn: document.getElementById('promptModeShortBtn'),
+  promptModeFullBtn: document.getElementById('promptModeFullBtn'),
+  aiPromptShortTemplate: document.getElementById('aiPromptShortTemplate'),
+  aiPromptFullTemplate: document.getElementById('aiPromptFullTemplate'),
   copyPromptBtn: document.getElementById('copyPromptBtn'),
   error: document.getElementById('errorBox'),
 };
 
-const promptTemplateRaw = els.aiPromptTemplate.value;
+const promptShortRaw = els.aiPromptShortTemplate.value;
 const UNKNOWN_TEXT = '匿名未知';
+let promptMode = 'short';
 
 function showError(text) {
   els.error.hidden = false;
@@ -31,7 +35,7 @@ function clearError() {
 
 function normalizeSetId(raw) {
   const n = Number(raw);
-  if (!Number.isInteger(n) || n < 1 || n > 99) return null;
+  if (!Number.isInteger(n) || n < 0 || n > 99) return null;
   return String(n).padStart(2, '0');
 }
 
@@ -48,7 +52,7 @@ function parseSetList(raw) {
       const a = Number(aRaw);
       const b = Number(bRaw);
       if (!Number.isInteger(a) || !Number.isInteger(b)) continue;
-      const lo = Math.max(1, Math.min(a, b));
+      const lo = Math.max(0, Math.min(a, b));
       const hi = Math.min(99, Math.max(a, b));
       for (let i = lo; i <= hi; i += 1) out.add(String(i).padStart(2, '0'));
       continue;
@@ -87,23 +91,46 @@ function buildQuestionnaireUrl(setId) {
   return new URL(`./aiti/q/${setId}.txt`, window.location.href).toString();
 }
 
-function refreshPromptTemplate(setId) {
+function getActivePromptText() {
+  return promptMode === 'full' ? els.aiPromptFullTemplate.value : els.aiPromptShortTemplate.value;
+}
+
+function setPromptMode(mode) {
+  promptMode = mode === 'full' ? 'full' : 'short';
+  const isFull = promptMode === 'full';
+  els.promptModeShortBtn.classList.toggle('active', !isFull);
+  els.promptModeFullBtn.classList.toggle('active', isFull);
+  els.aiPromptShortTemplate.style.display = isFull ? 'none' : '';
+  els.aiPromptFullTemplate.style.display = isFull ? '' : 'none';
+}
+
+function refreshPromptTemplate(setId, questionnaireText = '') {
   const qUrl = buildQuestionnaireUrl(setId);
-  els.aiPromptTemplate.value = promptTemplateRaw.replace('{QUESTIONNAIRE_URL}', qUrl);
+  els.aiPromptShortTemplate.value = promptShortRaw.replace('{QUESTIONNAIRE_URL}', qUrl);
+  const fullPrompt = [
+    `你正在参与一个问卷调查。请直接使用以下内置问卷完成作答与结果链接构造：`,
+    '',
+    '【问卷开始】',
+    questionnaireText || '(问卷内容尚未加载)',
+    '【问卷结束】',
+    '',
+    '请按问卷文件中的规则执行。',
+  ].join('\n');
+  els.aiPromptFullTemplate.value = fullPrompt;
 }
 
 async function handleLoadQuestionnaire() {
   clearError();
   const setId = normalizeSetId(els.setInput.value);
   if (!setId) {
-    showError('当前编号必须在 01-99。');
+    showError('当前编号必须在 00-99。');
     return;
   }
   els.setInput.value = setId;
   try {
     const text = await loadQuestionnaireText(setId);
     const qCount = getQuestionCount(text);
-    refreshPromptTemplate(setId);
+    refreshPromptTemplate(setId, text);
     els.questionnaireOutput.value = text;
     els.answerInput.placeholder = `请输入 ${qCount} 位答案串（1-4）`;
     if (!els.answerInput.value) {
@@ -125,6 +152,20 @@ function validateAnswer(answer) {
 function parseBundleText(raw) {
   const text = (raw || '').trim();
   if (!text) return null;
+  if (/^https?:\/\//i.test(text)) {
+    try {
+      const u = new URL(text);
+      return {
+        set: u.searchParams.get('q') || '',
+        name: u.searchParams.get('n') || '',
+        model: u.searchParams.get('m') || '',
+        answer: u.searchParams.get('a') || '',
+        length: '',
+      };
+    } catch {
+      return null;
+    }
+  }
   // 容错：支持英文/中文分隔符、换行、额外空白
   const normalized = text
     .replace(/；/g, ';')
@@ -173,7 +214,7 @@ function handleOpenResult() {
   clearError();
   const setId = normalizeSetId(els.setInput.value);
   if (!setId) {
-    showError('当前编号必须在 01-99。');
+    showError('当前编号必须在 00-99。');
     return;
   }
   els.setInput.value = setId;
@@ -193,7 +234,7 @@ function bind() {
   els.openResultBtn.addEventListener('click', handleOpenResult);
   els.copyPromptBtn.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(els.aiPromptTemplate.value);
+      await navigator.clipboard.writeText(getActivePromptText());
       const old = els.copyPromptBtn.textContent;
       els.copyPromptBtn.textContent = '已复制';
       setTimeout(() => {
@@ -203,14 +244,17 @@ function bind() {
       showError('复制失败，请手动复制。');
     }
   });
+  els.promptModeShortBtn.addEventListener('click', () => setPromptMode('short'));
+  els.promptModeFullBtn.addEventListener('click', () => setPromptMode('full'));
   els.randomSetBtn.addEventListener('click', () => {
     clearError();
     const list = parseSetList(els.setListInput.value);
-    if (!list.length) {
-      showError('编号列表无有效项，请使用如 01-10,15,20-25。');
+    const randomPool = list.filter((id) => id !== '00');
+    if (!randomPool.length) {
+      showError('编号列表无有效项，请使用如 01-10,15,20-25（00 仅手动）。');
       return;
     }
-    const setId = list[Math.floor(Math.random() * list.length)];
+    const setId = randomPool[Math.floor(Math.random() * randomPool.length)];
     els.setInput.value = setId;
     refreshPromptTemplate(setId);
     handleLoadQuestionnaire();
@@ -226,7 +270,7 @@ function bind() {
     }
     const setId = normalizeSetId(parsed.set || els.setInput.value);
     if (!setId) {
-      showError('当前编号必须在 01-99。');
+      showError('当前编号必须在 00-99。');
       return;
     }
     els.setInput.value = setId;
@@ -266,8 +310,10 @@ function bind() {
 function bootstrap() {
   bind();
   const list = parseSetList(els.setListInput.value);
-  const setId = list.length ? list[Math.floor(Math.random() * list.length)] : '01';
+  const randomPool = list.filter((id) => id !== '00');
+  const setId = randomPool.length ? randomPool[Math.floor(Math.random() * randomPool.length)] : '01';
   els.setInput.value = setId;
+  setPromptMode('short');
   refreshPromptTemplate(setId);
   handleLoadQuestionnaire();
 }
