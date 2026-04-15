@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
+  <title>SBTI AI 读题工具</title>
+  <style>
+    :root {
+      --bg: #f6faf6;
+      --panel: #ffffff;
+      --text: #1e2a22;
+      --muted: #6a786f;
+      --line: #dbe8dd;
+      --accent: #4d6a53;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, #f8fff8 0, #f6faf6 40%, #f2f7f3 100%);
+    }
+    .shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 16px 14px calc(28px + var(--safe-b));
+      display: grid;
+      gap: 14px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    .lead h1 { font-size: 1.4rem; margin-bottom: 8px; color: var(--accent); }
+    .lead p { color: var(--muted); line-height: 1.6; }
+    .top-link {
+      font-size: 0.92rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .top-link:hover { text-decoration: underline; }
+    .form-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      align-items: center;
+    }
+    .form-row-tight {
+      margin-top: 8px;
+      justify-content: flex-end;
+    }
+    .seed-input {
+      min-width: 220px;
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:active { transform: scale(0.98); }
+    .section-title {
+      margin-bottom: 10px;
+      font-size: 1.02rem;
+      color: var(--accent);
+    }
+    .hint {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      resize: vertical;
+      background: #fcfefc;
+      color: #243229;
+    }
+    .error {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(180, 55, 50, 0.3);
+      color: #9e2a2a;
+      background: #fff8f7;
+      font-size: 0.88rem;
+    }
+    .result-top {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .result-type {
+      font-size: 1.26rem;
+      font-weight: 800;
+    }
+    .result-sub {
+      color: #2f4236;
+      line-height: 1.6;
+      font-size: 0.94rem;
+    }
+    .result-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 640px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+    th {
+      background: #f3f8f4;
+      color: #395141;
+      font-weight: 700;
+    }
+    tr:last-child td { border-bottom: 0; }
+    .site-footer {
+      margin-top: 4px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .site-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="card lead">
+      <a class="top-link" href="/">← 返回首页</a>
+      <h1>SBTI AI 读题工具（极简协议）</h1>
+      <p>流程：选问卷 → AI 读取文本问卷作答 → 按位答案串拼接 URL → 打开结果页。</p>
+      <div class="form-row">
+        <label for="setListInput">编号列表</label>
+        <input id="setListInput" class="seed-input" type="text" value="01-99" placeholder="如: 01-10,15,20-25" />
+      </div>
+      <div class="form-row">
+        <label for="qsetInput">当前编号</label>
+        <input id="qsetInput" class="seed-input" type="text" value="01" style="max-width:180px;" />
+        <button id="randomSetBtn" type="button">随机选择</button>
+        <button id="loadQuestionnaireBtn" type="button">加载问卷文本</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">1) 给 AI 的问卷文本</h2>
+      <p class="hint">协议：`Q|题号|题目|选项`。所有题目均为必答题，无条件占位。</p>
+      <textarea id="questionnaireOutput" spellcheck="false"></textarea>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">给 AI 的指令模板</h2>
+      <p class="hint">把下方指令和上面的问卷文本一起发给 AI。要求 AI 仅返回答案串，不要解释。</p>
+      <textarea id="aiPromptTemplate" spellcheck="false" readonly style="min-height:120px;">你正在参与一个问卷调查，请从链接 {QUESTIONNAIRE_URL} 获取问卷信息，并按问卷文件内的规则完成作答与结果链接构造。</textarea>
+      <div class="form-row form-row-tight">
+        <button id="copyPromptBtn" type="button">复制指令模板</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">2) 填答案串并生成结果 URL</h2>
+      <p class="hint">答案串只允许 `1-4`，第 N 位对应问卷第 N 题。</p>
+      <p class="hint">也可直接粘贴标准串：`NAME=...;MODEL=...;ANSWER=...;LENGTH=...`，点击“解析标准串”。</p>
+      <textarea id="resultBundleInput" spellcheck="false" style="min-height:90px;" placeholder="SET=19;NAME=GitHub Copilot;MODEL=Claude Sonnet 4.6;ANSWER=233...;LENGTH=32"></textarea>
+      <div class="form-row form-row-tight">
+        <button id="parseBundleBtn" type="button">解析标准串</button>
+      </div>
+      <textarea id="answerInput" spellcheck="false" style="min-height:100px;"></textarea>
+      <div class="form-row">
+        <label for="respondentNameInput">你是谁/称呼（可空）</label>
+        <input id="respondentNameInput" class="seed-input" type="text" placeholder="不填则为：匿名未知" />
+      </div>
+      <div class="form-row">
+        <label for="respondentModelInput">你的模型（可空）</label>
+        <input id="respondentModelInput" class="seed-input" type="text" placeholder="不填则为：匿名未知" />
+      </div>
+      <div class="form-row">
+        <button id="openResultBtn" type="button">3) 打开结果页</button>
+      </div>
+      <div id="errorBox" class="error" hidden></div>
+      <textarea id="resultUrl" spellcheck="false" readonly style="min-height:88px;margin-top:10px;"></textarea>
+    </section>
+
+    <footer class="site-footer">
+      <a href="/sbti">SBTI 人工测试</a> ·
+      <a href="/aiti-result">AI 结果页</a> ·
+      <a href="/wiki">人格图鉴</a> ·
+      <a href="/sbkpi">搭子图鉴</a>
+    </footer>
+  </div>
+  <script type="module" src="./js/sbti-aiti.js"></script>
+</body>
+</html>
