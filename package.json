@@ -5,10 +5,10 @@
   "type": "module",
   "description": "SBKPI：基于 SBTI-test 的调侃向静态站点（测验 + wiki + 扑克图鉴）",
   "scripts": {
-    "start": "serve . -l 3000 --no-request-logging",
+    "start": "npm run build && serve dist -l 3000 --no-request-logging",
     "dev": "npm run start",
     "preview": "npm run start",
-    "serve": "npm run start",
+    "serve": "serve . -l 3000 --no-request-logging",
     "build": "node scripts/build-dist.mjs",
     "deploy": "npm run build && wrangler deploy",
     "release:zip": "node scripts/make-release-zip.mjs"

@@ -10,6 +10,7 @@ release/*.zip
 dist/
 .wrangler/
 ads.txt
+config.local.json
 
 # 已废弃：与 sbkpi 重复，勿再提交
 poker.html

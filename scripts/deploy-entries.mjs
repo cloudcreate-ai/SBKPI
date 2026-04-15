@@ -4,7 +4,6 @@
  */
 export const DEPLOY_ENTRIES = [
   '_redirects',
-  'ads.txt',
   'index.html',
   'sbti.html',
   'wiki.html',
