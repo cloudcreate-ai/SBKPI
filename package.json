@@ -1,9 +1,9 @@
 {
-  "name": "sbti-v2",
+  "name": "sbkpi",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "SBTI 人格测试静态站点（ES Module）",
+  "description": "SBKPI：基于 SBTI-test 的调侃向静态站点（测验 + wiki + 扑克图鉴）",
   "scripts": {
     "start": "serve . -l 3000 --no-request-logging",
     "dev": "npm run start",
