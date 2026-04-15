@@ -1,6 +1,6 @@
 # SBKPI
 
-基于上游仓库 **[SBTI-test](https://github.com/UnluckyNinja/SBTI-test)** 的思路与结构做的**变种站点**：**`index.html`** 为 SBKPI 首页（随机抽卡、设计说明与声明），**`sbti.html`** 为 **SBTI 人格测验**，另有 **SBTI 人格图鉴**（`wiki.html`）与 **SBKPI 扑克图鉴**（`sbpki.html`）。内容以**调侃、玩梗、搞笑**为主，**请勿当真**，更不适合当作心理测评、职场评价或任何严肃决策依据。
+基于上游仓库 **[SBTI-test](https://github.com/UnluckyNinja/SBTI-test)** 的思路与结构做的**变种站点**：`**index.html`** 为 SBKPI 首页（随机抽卡、设计说明与声明），`**sbti.html**` 为 **SBTI 人格测验**，另有 **SBTI 人格图鉴**（`wiki.html`）与 **SBKPI 扑克图鉴**（`sbkpi.html`）。内容以**调侃、玩梗、搞笑**为主，**请勿当真**，更不适合当作心理测评、职场评价或任何严肃决策依据。
 
 ## 仓库
 
@@ -17,17 +17,17 @@ npm start
 
 浏览器打开 [http://localhost:3000](http://localhost:3000)。
 
-**打包 zip（便于部署 Cloudflare Pages 等静态托管）：** `npm run release:zip` → 在 `release/` 下生成 `sbkpi-YYYY-MM-DD-HHmmss.zip`，**仅含** `index.html`、`sbti.html`、`wiki.html`、`sbpki.html`、`js/`、`image/poster/`、`docs/persona-poker-deck.csv`（不含 `node_modules`、Markdown、备份等；新增静态入口或资源时请同步更新 `scripts/make-release-zip.mjs` 中的 `DEPLOY_ENTRIES`）。
+**打包 zip（便于部署 Cloudflare Pages 等静态托管）：** `npm run release:zip` → 在 `release/` 下生成 `sbkpi-YYYY-MM-DD-HHmmss.zip`，**仅含** `index.html`、`sbti.html`、`wiki.html`、`sbkpi.html`、`js/`、`image/poster/`、`docs/persona-poker-deck.csv`（不含 `node_modules`、Markdown、备份等；新增静态入口或资源时请同步更新 `scripts/make-release-zip.mjs` 中的 `DEPLOY_ENTRIES`）。
 
 ## 页面说明
 
 
-| 入口           | 说明 |
-| ------------ | --- |
+| 入口           | 说明                           |
+| ------------ | ---------------------------- |
 | `index.html` | SBKPI 首页：随机抽卡、设计想法、项目声明与入口导航 |
-| `sbti.html`  | SBTI 人格测验（向导式答题） |
-| `wiki.html`  | SBTI 人格图鉴：类型介绍与海报 |
-| `sbpki.html` | SBKPI 图鉴：54 张牌面与人格技能风味文案 |
+| `sbti.html`  | SBTI 人格测验（向导式答题）             |
+| `wiki.html`  | SBTI 人格图鉴：类型介绍与海报            |
+| `sbkpi.html` | SBKPI 图鉴：54 张牌面与人格技能风味文案     |
 
 
 **SBKPI 牌组设定**（红黑身份、矩阵排布、与图鉴关系等）：[docs/sbkpi-game-setting.md](docs/sbkpi-game-setting.md)。**玩法设计讨论稿**（PVE/KPI/槽位等，未实现，摘自对话整理）：[docs/sbkpi-play-design-discussion.md](docs/sbkpi-play-design-discussion.md)。

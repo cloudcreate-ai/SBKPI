@@ -1,7 +1,7 @@
 # SBKPI 玩法设计讨论稿
 
 > **性质**：由多人与 AI 多轮对话整理而成，反映**曾讨论过、尚未在代码中实现**的玩法方向；**不是**现行产品规格。原始对话全文见仓库根目录 `[chat.md](../chat.md)`。  
-> **已实现内容**：54 张人格扑克**图鉴**与数据表 `[persona-poker-deck.csv](./persona-poker-deck.csv)`、`[sbpki.html](../sbpki.html)` 展示，见 [sbkpi-game-setting.md](./sbkpi-game-setting.md)。
+> **已实现内容**：54 张人格扑克**图鉴**与数据表 `[persona-poker-deck.csv](./persona-poker-deck.csv)`、`[sbkpi.html](../sbkpi.html)` 展示，见 [sbkpi-game-setting.md](./sbkpi-game-setting.md)。
 
 ---
 

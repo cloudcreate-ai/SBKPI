@@ -8,6 +8,9 @@ logs
 # Release构建产物
 release/*.zip
 
+# 已废弃：与 sbkpi 重复，勿再提交
+poker.html
+
 # Misc
 .DS_Store
 .fleet

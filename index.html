@@ -6,6 +6,13 @@
   <link rel="canonical" href="https://thedecklab.com/" />
   <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
   <title>挑选你的SBKPI搭子 · SBKPI</title>
+  <meta name="description" content="挑选职场 SBKPI 工作搭子：轻量 SBTI test、人格图鉴与扑克牌玩法，融入职场黑话与搭子梗。娱乐向站点，非专业心理量表。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content="挑选你的SBKPI搭子 · SBKPI" />
+  <meta property="og:description" content="挑选职场 SBKPI 工作搭子：轻量 SBTI test、人格图鉴与扑克牌玩法，融入职场黑话与搭子梗。娱乐向站点，非专业心理量表。" />
+  <meta property="og:url" content="https://thedecklab.com/" />
+  <meta name="twitter:card" content="summary" />
   <style>
     :root {
       --bg: #f6faf6;
@@ -387,20 +394,42 @@
       line-height: 1.6;
       color: #3d4f45;
     }
-    .land-footer {
+    /* 全站统一页脚 */
+    .site-footer {
       margin-top: 8px;
-      padding: 16px 4px 0;
+      padding: 18px 4px 0;
+      border-top: 1px solid var(--line);
+      text-align: center;
       font-size: 0.86rem;
       color: var(--muted);
-      line-height: 1.6;
-      text-align: center;
+      line-height: 1.65;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
     }
-    .land-footer a {
+    .site-footer-nav,
+    .site-footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .site-footer-meta {
+      font-size: 0.82rem;
+    }
+    .site-footer a {
       color: var(--accent-strong);
       font-weight: 600;
       text-decoration: none;
     }
-    .land-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .site-footer-sep {
+      color: #b8c9bc;
+      font-weight: 700;
+      user-select: none;
+    }
     /* 页尾：本机数据说明与清除（对齐 sbti 测验页风格） */
     .land-data-bar {
       margin-top: 8px;
@@ -460,7 +489,7 @@
       <div class="land-nav-grid">
         <a class="land-nav-btn" href="/sbti">SBTI 人格测验</a>
         <a class="land-nav-btn" href="/wiki">SBTI 人格图鉴</a>
-        <a class="land-nav-btn" href="/sbpki" id="navSbpkiGallery">SBKPI搭子图鉴<span id="navGalleryUnlock" class="land-nav-unlock" aria-hidden="true"></span></a>
+        <a class="land-nav-btn" href="/sbkpi" id="navSbkpiGallery">SBKPI搭子图鉴<span id="navGalleryUnlock" class="land-nav-unlock" aria-hidden="true"></span></a>
       </div>
     </nav>
 
@@ -486,10 +515,25 @@
       <button type="button" id="landClearLocalBtn" class="land-clear-local-btn"></button>
       <p class="land-privacy-note" id="landPrivacyNote"></p>
     </div>
-    <footer class="land-footer">
-      <a id="landSiteLink" href="https://thedecklab.com">thedecklab.com</a>
-      <span aria-hidden="true"> · </span>
-      <a id="landGhLink" href="https://github.com/cloudcreate-ai/SBKPI">GitHub</a>
+    <footer class="site-footer" role="contentinfo">
+      <nav class="site-footer-nav" aria-label="主要页面">
+        <a href="/" aria-current="page">首页</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbti">SBTI 测验</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/wiki">人格图鉴</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbkpi">搭子图鉴</a>
+      </nav>
+      <div class="site-footer-meta">
+        <a href="https://thedecklab.com/">thedecklab.com</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="https://github.com/cloudcreate-ai/SBKPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/privacy">隐私说明</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">服务条款</a>
+      </div>
     </footer>
   </div>
 

@@ -6,6 +6,13 @@
   <link rel="canonical" href="https://thedecklab.com/sbti" />
   <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
   <title>SBTI 人格测验</title>
+  <meta name="description" content="在线 SBTI test：几分钟完成职场向人格测验，结果可对照人格图鉴与 SBKPI 工作搭子页的梗与职场黑话。娱乐向，非临床测评。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content="SBTI 人格测验" />
+  <meta property="og:description" content="在线 SBTI test：几分钟完成职场向人格测验，结果可对照人格图鉴与 SBKPI 工作搭子页的梗与职场黑话。娱乐向，非临床测评。" />
+  <meta property="og:url" content="https://thedecklab.com/sbti" />
+  <meta name="twitter:card" content="summary" />
   <style>
     :root {
       --bg: #f6faf6;
@@ -629,6 +636,42 @@
       flex-shrink: 0;
       display: block;
     }
+    /* 全站统一页脚 */
+    .site-footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.65;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .site-footer-nav,
+    .site-footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .site-footer-meta {
+      font-size: 0.82rem;
+    }
+    .site-footer a {
+      color: var(--accent-strong);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .site-footer-sep {
+      color: #b8c9bc;
+      font-weight: 700;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -648,7 +691,7 @@
           <a class="intro-gallery-link" href="/wiki">SBTI 人格图鉴 · 浏览全部类型</a>
         </p>
         <p class="intro-gallery-row">
-          <a class="intro-gallery-link" href="/sbpki">SBKPI搭子图鉴 · 卡面展示</a>
+          <a class="intro-gallery-link" href="/sbkpi">SBKPI搭子图鉴 · 卡面展示</a>
         </p>
         <details class="intro-history" id="introHistory" hidden>
           <summary id="introHistorySummary">历次结果</summary>
@@ -746,6 +789,27 @@
         </div>
       </div>
     </section>
+
+    <footer class="site-footer" role="contentinfo">
+      <nav class="site-footer-nav" aria-label="主要页面">
+        <a href="/">首页</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbti" aria-current="page">SBTI 测验</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/wiki">人格图鉴</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbkpi">搭子图鉴</a>
+      </nav>
+      <div class="site-footer-meta">
+        <a href="https://thedecklab.com/">thedecklab.com</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="https://github.com/cloudcreate-ai/SBKPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/privacy">隐私说明</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">服务条款</a>
+      </div>
+    </footer>
   </div>
 
   <script type="module" src="./js/sbti-app.js"></script>

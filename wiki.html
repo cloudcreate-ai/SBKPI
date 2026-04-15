@@ -6,6 +6,13 @@
   <link rel="canonical" href="https://thedecklab.com/wiki" />
   <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
   <title>SBTI 人格图鉴</title>
+  <meta name="description" content="SBTI 人格图鉴：按类型查看解读、彩蛋与职场黑话；可与 SBKPI 工作搭子图鉴、SBTI test 测验结果对照浏览。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content="SBTI 人格图鉴" />
+  <meta property="og:description" content="SBTI 人格图鉴：按类型查看解读、彩蛋与职场黑话；可与 SBKPI 工作搭子图鉴、SBTI test 测验结果对照浏览。" />
+  <meta property="og:url" content="https://thedecklab.com/wiki" />
+  <meta name="twitter:card" content="summary" />
   <style>
     :root {
       --bg: #f6faf6;
@@ -304,6 +311,42 @@
       line-height: 1.75;
       color: #304034;
     }
+    /* 全站统一页脚 */
+    .site-footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.65;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .site-footer-nav,
+    .site-footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .site-footer-meta {
+      font-size: 0.82rem;
+    }
+    .site-footer a {
+      color: var(--accent-strong);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .site-footer-sep {
+      color: #b8c9bc;
+      font-weight: 700;
+      user-select: none;
+    }
     @media (min-width: 480px) {
       .shell { padding-left: 20px; padding-right: 20px; }
     }
@@ -320,7 +363,7 @@
         <p>点击卡片查看简介与完整解读；可通过链接加 <code>#类型代码</code> 分享。</p>
       </div>
       <div class="page-actions">
-        <a class="back-link" href="/sbpki">SBKPI搭子图鉴</a>
+        <a class="back-link" href="/sbkpi">SBKPI搭子图鉴</a>
         <a class="back-link" href="/sbti">← 返回测验</a>
       </div>
     </header>
@@ -334,6 +377,27 @@
     </div>
 
     <div id="typeGrid" class="type-grid" role="list"></div>
+
+    <footer class="site-footer" role="contentinfo">
+      <nav class="site-footer-nav" aria-label="主要页面">
+        <a href="/">首页</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbti">SBTI 测验</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/wiki" aria-current="page">人格图鉴</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbkpi">搭子图鉴</a>
+      </nav>
+      <div class="site-footer-meta">
+        <a href="https://thedecklab.com/">thedecklab.com</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="https://github.com/cloudcreate-ai/SBKPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/privacy">隐私说明</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">服务条款</a>
+      </div>
+    </footer>
   </div>
 
   <dialog id="typeDialog" class="type-dialog" aria-labelledby="typeDialogTitle">

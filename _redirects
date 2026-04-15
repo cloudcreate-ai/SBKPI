@@ -1,4 +1,12 @@
 # Cloudflare Pages：无 .html 后缀访问静态页（200 为内部重写）
 /sbti /sbti.html 200
 /wiki /wiki.html 200
-/sbpki /sbpki.html 200
+/sbkpi /sbkpi.html 200
+# 旧「扑克牌」独立页已并入搭子图鉴（sbkpi）
+/poker /sbkpi 301
+/poker.html /sbkpi 301
+/privacy /privacy.html 200
+/terms /terms.html 200
+# 旧路径拼写（sbpki）301 至正确 URL，避免死链与重复内容
+/sbpki /sbkpi 301
+/sbpki.html /sbkpi 301

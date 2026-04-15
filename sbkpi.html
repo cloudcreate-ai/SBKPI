@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="canonical" href="https://thedecklab.com/sbkpi" />
   <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
-  <title>SBTI 人格扑克牌</title>
+  <title>SBKPI搭子图鉴 · SBKPI</title>
+  <meta name="description" content="SBKPI 工作搭子图鉴：按扑克花色浏览 Boss/同事搭子组合，附职场黑话与技能梗；衔接 SBTI test 与人格图鉴。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content="SBKPI搭子图鉴 · SBKPI" />
+  <meta property="og:description" content="SBKPI 工作搭子图鉴：按扑克花色浏览 Boss/同事搭子组合，附职场黑话与技能梗；衔接 SBTI test 与人格图鉴。" />
+  <meta property="og:url" content="https://thedecklab.com/sbkpi" />
+  <meta name="twitter:card" content="summary" />
   <style>
     :root {
       --bg: #f6faf6;
@@ -125,7 +133,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
-    .poker-card {
+       .poker-card {
       border: none;
       padding: 0;
       margin: 0;
@@ -136,6 +144,84 @@
       font: inherit;
       color: inherit;
       -webkit-tap-highlight-color: transparent;
+    }
+    .poker-card--locked {
+      cursor: not-allowed;
+    }
+    .poker-card--locked .card-inner {
+      transition: none;
+    }
+    .card-front--locked {
+      background: linear-gradient(180deg, #e8eae9, #dde2df) !important;
+      filter: saturate(0.65);
+      padding-bottom: 22px;
+    }
+    .card-avatar--locked {
+      background: repeating-linear-gradient(
+        -12deg,
+        #c5ccc8,
+        #c5ccc8 4px,
+        #b8c0bb 4px,
+        #b8c0bb 8px
+      );
+      align-items: center;
+      justify-content: center;
+    }
+    .card-lock-icon {
+      font-size: 2rem;
+      line-height: 1;
+      opacity: 0.55;
+      user-select: none;
+    }
+    .card-name--locked,
+    .card-code--locked {
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+    .card-locked-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: #fff;
+      background: rgba(30, 42, 34, 0.72);
+      pointer-events: none;
+      z-index: 3;
+    }
+    .card-back--locked {
+      background: linear-gradient(180deg, #f0f2f1, #e2e6e3) !important;
+      justify-content: center;
+      text-align: center;
+    }
+    .back-locked-title {
+      margin: 0;
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+    .back-locked-hint {
+      margin: 0;
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .card-unlock-cta {
+      margin-top: 2px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      position: relative;
+      z-index: 4;
+    }
+    .card-unlock-cta:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
     .card-inner {
       position: relative;
@@ -284,6 +370,42 @@
       }
       .count { justify-self: start; }
     }
+    /* 全站统一页脚 */
+    .site-footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.65;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .site-footer-nav,
+    .site-footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .site-footer-meta {
+      font-size: 0.82rem;
+    }
+    .site-footer a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .site-footer-sep {
+      color: #b8c9bc;
+      font-weight: 700;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -292,13 +414,13 @@
       <div>
         <h1>
           <img src="/image/favicon.png" alt="" class="page-title-logo" width="64" height="64" decoding="async" />
-          <span>SBTI 人格扑克牌</span>
+          <span>SBKPI搭子图鉴</span>
         </h1>
-        <p>54 张：红色为 Boss，黑色为同事；点击卡面可翻转查看黑话与技能。</p>
+        <p>54 张 SBKPI搭子：需先在<strong>首页抽卡</strong>解锁；已解锁的可点击翻面查看口头禅与技能，未解锁的不可翻面。</p>
       </div>
       <div class="page-actions">
-        <a class="back-link" href="./cards.html">人格图鉴</a>
-        <a class="back-link" href="./index.html">← 返回首页</a>
+        <a class="back-link" href="/wiki">SBTI 人格图鉴</a>
+        <a class="back-link" href="/">← 返回首页</a>
       </div>
     </header>
 
@@ -317,10 +439,31 @@
         <option value="Clubs">Clubs ♣</option>
         <option value="Joker">Joker 🃏</option>
       </select>
-      <div class="count">当前 <strong id="cardCount">0</strong> 张</div>
+      <div class="count">当前 <strong id="cardCount">0</strong> 张 · 已解锁 <strong id="unlockCount">0</strong>/<span id="unlockTotal">54</span></div>
     </section>
 
-    <section id="pokerGrid" class="poker-grid" aria-label="扑克牌列表"></section>
+    <section id="pokerGrid" class="poker-grid" aria-label="SBKPI搭子图鉴列表"></section>
+
+    <footer class="site-footer" role="contentinfo">
+      <nav class="site-footer-nav" aria-label="主要页面">
+        <a href="/">首页</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbti">SBTI 测验</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/wiki">人格图鉴</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbkpi" aria-current="page">搭子图鉴</a>
+      </nav>
+      <div class="site-footer-meta">
+        <a href="https://thedecklab.com/">thedecklab.com</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="https://github.com/cloudcreate-ai/SBKPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/privacy">隐私说明</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">服务条款</a>
+      </div>
+    </footer>
   </div>
 
   <script type="module" src="./js/sbti-poker.js"></script>

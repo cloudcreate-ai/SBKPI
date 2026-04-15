@@ -132,7 +132,7 @@ function refreshUnlockProgress(deckTotal) {
   const progressText = `已解锁 ${n}/${deckTotal}`;
 
   const navSpan = document.getElementById('navGalleryUnlock');
-  const navLink = document.getElementById('navSbpkiGallery');
+  const navLink = document.getElementById('navSbkpiGallery');
   if (navSpan && navLink) {
     navSpan.textContent = ` · ${progressText}`;
     navLink.setAttribute('aria-label', `SBKPI搭子图鉴，已解锁 ${n}张，共 ${deckTotal} 张`);
