@@ -8,6 +8,14 @@
 git@github.com:cloudcreate-ai/SBKPI.git
 ```
 
+## 线上测试站点
+
+[https://thedecklab.com](https://thedecklab.com)
+
+## 页面截图
+
+![SBKPI 页面截图](screenshot/sbkpi-screenshot.webp)
+
 ## 本地运行
 
 ```bash
@@ -17,7 +25,21 @@ npm start
 
 浏览器打开 [http://localhost:3000](http://localhost:3000)。
 
-**打包 zip（便于部署 Cloudflare Pages 等静态托管）：** `npm run release:zip` → 在 `release/` 下生成 `sbkpi-YYYY-MM-DD-HHmmss.zip`，**仅含** `index.html`、`sbti.html`、`wiki.html`、`sbkpi.html`、`js/`、`image/poster/`、`docs/persona-poker-deck.csv`（不含 `node_modules`、Markdown、备份等；新增静态入口或资源时请同步更新 `scripts/make-release-zip.mjs` 中的 `DEPLOY_ENTRIES`）。
+## 构建与部署
+
+```bash
+# 构建 Worker 静态资源目录
+npm run build
+
+# 部署到 Cloudflare Worker（wrangler.jsonc -> name: sbpki）
+npm run deploy
+```
+
+- `npm run build` 会生成 `dist/`（用于 Worker Assets）。
+- `npm run deploy` 会先构建再执行 `wrangler deploy`。
+- 仍可使用 `npm run release:zip` 生成发布包到 `release/`。
+- 部署清单统一维护在 `scripts/deploy-entries.mjs`（zip 与 dist 复用）。
+- `ads.txt` 默认在本地维护并被 git 忽略，但会在构建/部署时纳入产物。
 
 ## 页面说明
 
@@ -28,6 +50,8 @@ npm start
 | `sbti.html`  | SBTI 人格测验（向导式答题）             |
 | `wiki.html`  | SBTI 人格图鉴：类型介绍与海报            |
 | `sbkpi.html` | SBKPI 图鉴：54 张牌面与人格技能风味文案     |
+| `privacy.html` | 隐私说明 |
+| `terms.html` | 服务条款 |
 
 
 **SBKPI 牌组设定**（红黑身份、矩阵排布、与图鉴关系等）：[docs/sbkpi-game-setting.md](docs/sbkpi-game-setting.md)。**玩法设计讨论稿**（PVE/KPI/槽位等，未实现，摘自对话整理）：[docs/sbkpi-play-design-discussion.md](docs/sbkpi-play-design-discussion.md)。

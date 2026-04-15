@@ -9,6 +9,7 @@ logs
 release/*.zip
 dist/
 .wrangler/
+ads.txt
 
 # 已废弃：与 sbkpi 重复，勿再提交
 poker.html
