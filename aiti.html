@@ -111,10 +111,12 @@
       flex: 1;
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       font: inherit;
-      font-size: 0.95rem;
-      min-height: 48px;
+      font-size: 0.86rem;
+      min-height: 44px;
+      background: #fcfefc;
+      color: var(--text);
     }
     button {
       border: 0;
@@ -149,16 +151,11 @@
       line-height: 1.6;
       margin-bottom: 8px;
     }
-    /* 答卷称呼 / 模型：与说明类文案同档字号 */
-    .respondent-block label {
+    /* 挑选问卷、称呼/模型等：标签与单行框与 .hint 档位一致 */
+    .aiti-field-group label {
       font-size: 0.86rem;
       color: var(--muted);
       font-weight: 600;
-    }
-    .respondent-block .seed-input {
-      font-size: 0.86rem;
-      min-height: 44px;
-      padding: 10px 12px;
     }
     textarea {
       width: 100%;
@@ -231,16 +228,18 @@
 
     <section class="card">
       <h2 class="section-title">1) 挑选问卷</h2>
-      <div class="form-row">
-        <label for="setListInput">编号列表</label>
-        <input id="setListInput" class="seed-input" type="text" value="01-99" placeholder="如: 01-10,15,20-25" />
-      </div>
-      <p class="hint">校验专用问卷 `00` 为固定顺序（q1→q32），仅支持手动输入到“当前编号”，不会被随机选择。</p>
-      <div class="form-row">
-        <label for="qsetInput">当前编号</label>
-        <input id="qsetInput" class="seed-input" type="text" value="01" style="max-width:180px;" />
-        <button id="randomSetBtn" type="button" class="btn-secondary">随机选择</button>
-        <button id="loadQuestionnaireBtn" type="button" class="btn-primary">加载问卷文本</button>
+      <div class="aiti-field-group">
+        <div class="form-row">
+          <label for="setListInput">编号列表</label>
+          <input id="setListInput" class="seed-input" type="text" value="01-99" placeholder="如: 01-10,15,20-25" />
+        </div>
+        <p class="hint">校验专用问卷 `00` 为固定顺序（q1→q32），仅支持手动输入到“当前编号”，不会被随机选择。</p>
+        <div class="form-row">
+          <label for="qsetInput">当前编号</label>
+          <input id="qsetInput" class="seed-input" type="text" value="01" style="max-width:180px;" />
+          <button id="randomSetBtn" type="button" class="btn-secondary">随机选择</button>
+          <button id="loadQuestionnaireBtn" type="button" class="btn-primary">加载问卷文本</button>
+        </div>
       </div>
     </section>
 
@@ -273,7 +272,7 @@
         <button id="parseBundleBtn" type="button" class="btn-secondary">解析标准串</button>
       </div>
       <textarea id="answerInput" spellcheck="false" style="min-height:100px;"></textarea>
-      <div class="respondent-block">
+      <div class="aiti-field-group">
         <div class="form-row">
           <label for="respondentNameInput">你是谁/称呼（可空）</label>
           <input id="respondentNameInput" class="seed-input" type="text" placeholder="不填则为：匿名未知" />
