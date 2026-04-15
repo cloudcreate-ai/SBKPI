@@ -2,6 +2,7 @@
  * SBKPI 站点首页：SBKPI搭子抽卡
  */
 import zh from './sbti-data.zh.js';
+import { getUnlockedCardIds, recordUnlock } from './sbti-unlock.js';
 
 const { typePosters, typeLibrary } = zh;
 
@@ -42,8 +43,12 @@ function rankLabel(rank) {
   return rank === 'JOKER' ? 'JOKER' : rank;
 }
 
-/** @param {HTMLElement} host */
-function renderDrawCard(row, host) {
+/**
+ * @param {HTMLElement} host
+ * @param {{ showNewUnlock?: boolean }} [opts]
+ */
+function renderDrawCard(row, host, opts = {}) {
+  const { showNewUnlock = false } = opts;
   const portrait = typePosters[row.persona_code]?.image || '';
   const roleCn = row.role === 'Boss' ? '领导' : '同事';
   const sym = suitSymbol(row.suit);
@@ -73,9 +78,14 @@ function renderDrawCard(row, host) {
             </div>
           </div>`;
 
+  const newUnlockBanner = showNewUnlock
+    ? '<div class="draw-new-unlock" role="status" aria-live="polite">新搭子解锁<span class="draw-new-unlock-bang" aria-hidden="true">！</span></div>'
+    : '';
+
   host.innerHTML = `
       <div class="draw-result-inner">
         <div class="land-poker-slot">
+          ${newUnlockBanner}
           <div class="${pokerCls}">
             <div class="land-poker-inner">
               <div class="land-poker-front">
@@ -113,6 +123,26 @@ function renderDrawCard(row, host) {
   host.hidden = false;
 }
 
+/** @param {number} deckTotal */
+function refreshUnlockProgress(deckTotal) {
+  const n = getUnlockedCardIds().size;
+  const progressText = `已解锁 ${n}/${deckTotal}`;
+
+  const navSpan = document.getElementById('navGalleryUnlock');
+  const navLink = document.getElementById('navSbpkiGallery');
+  if (navSpan && navLink) {
+    navSpan.textContent = ` · ${progressText}`;
+    navLink.setAttribute('aria-label', `SBKPI搭子图鉴，已解锁 ${n}张，共 ${deckTotal} 张`);
+  }
+
+  const drawUnlock = document.getElementById('drawBtnUnlock');
+  const drawBtn = document.getElementById('drawCardBtn');
+  if (drawUnlock && drawBtn) {
+    drawUnlock.textContent = ` · ${progressText}`;
+    drawBtn.setAttribute('aria-label', `换一个 SBKPI 搭子，当前${progressText}`);
+  }
+}
+
 async function main() {
   const res = await fetch('./docs/persona-poker-deck.csv');
   const rows = parseCsv(await res.text());
@@ -120,14 +150,20 @@ async function main() {
   const host = document.getElementById('drawCardResult');
   if (!rows.length || !btn || !host) return;
 
+  const deckTotal = rows.length;
+
   // 每次进入页面随机展示；抽卡按钮仍会写入上次结果（供扩展或其它入口读取）
   const rowToShow = rows[Math.floor(Math.random() * rows.length)];
-  renderDrawCard(rowToShow, host);
+  const firstUnlock = recordUnlock(rowToShow.card_id);
+  renderDrawCard(rowToShow, host, { showNewUnlock: firstUnlock.isNew });
+  refreshUnlockProgress(deckTotal);
 
   btn.addEventListener('click', () => {
     const row = rows[Math.floor(Math.random() * rows.length)];
     localStorage.setItem(LAST_DRAW_KEY, row.card_id);
-    renderDrawCard(row, host);
+    const { isNew } = recordUnlock(row.card_id);
+    renderDrawCard(row, host, { showNewUnlock: isNew });
+    refreshUnlockProgress(deckTotal);
   });
 }
 

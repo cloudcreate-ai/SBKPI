@@ -1,4 +1,5 @@
 import zh from './sbti-data.zh.js';
+import { getUnlockedCardIds } from './sbti-unlock.js';
 
 const { typePosters } = zh;
 
@@ -149,26 +150,37 @@ function revealPokerTarget(target) {
   window.setTimeout(() => target.classList.remove('poker-card--focus'), 2600);
 }
 
-/** @param {Record<string, string>} card */
-function createCardEl(card) {
+/**
+ * @param {Record<string, string>} card
+ * @param {Set<string>} unlockedIds
+ */
+function createCardEl(card, unlockedIds) {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.id = `poker-${card.card_id}`;
-  btn.className = `poker-card ${card.color === 'Red' ? 'is-red' : 'is-black'} ${card.rank === 'JOKER' ? 'is-joker' : ''}`;
+  const isUnlocked = unlockedIds.has(card.card_id);
+  btn.className = `poker-card ${card.color === 'Red' ? 'is-red' : 'is-black'} ${card.rank === 'JOKER' ? 'is-joker' : ''}${isUnlocked ? '' : ' poker-card--locked'}`;
   btn.dataset.role = card.role;
   btn.dataset.suit = card.suit;
   btn.dataset.personaCode = card.persona_code;
-  btn.dataset.search = [
-    card.card_id,
-    card.role,
-    card.suit,
-    card.persona_code,
-    card.persona_name,
-    card.flavor,
-    card.skill,
-  ]
-    .join(' ')
-    .toLowerCase();
+  btn.dataset.unlocked = isUnlocked ? '1' : '0';
+  if (isUnlocked) {
+    btn.dataset.search = [
+      card.card_id,
+      card.role,
+      card.suit,
+      card.persona_code,
+      card.persona_name,
+      card.flavor,
+      card.skill,
+    ]
+      .join(' ')
+      .toLowerCase();
+  } else {
+    btn.dataset.search = [card.card_id, card.role, card.suit, card.rank, '未解锁'].join(' ').toLowerCase();
+    btn.setAttribute('aria-disabled', 'true');
+    btn.setAttribute('aria-label', '未解锁：请在首页抽卡解锁后可翻面查看');
+  }
 
   const portrait = personaImage(card.persona_code);
   const symbol = suitSymbol(card.suit);
@@ -176,7 +188,8 @@ function createCardEl(card) {
   const roleCn = card.role === 'Boss' ? '领导' : '同事';
   const galleryHash = encodeURIComponent(card.persona_code);
 
-  btn.innerHTML = `
+  if (isUnlocked) {
+    btn.innerHTML = `
     <div class="card-inner">
       <div class="card-face card-front">
         <div class="card-corner top">
@@ -200,17 +213,49 @@ function createCardEl(card) {
       </div>
     </div>
   `;
-
-  const galleryLink = btn.querySelector('.card-gallery-link');
-  if (galleryLink) {
-    galleryLink.addEventListener('click', (e) => {
-      e.stopPropagation();
+    const galleryLink = btn.querySelector('.card-gallery-link');
+    if (galleryLink) {
+      galleryLink.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('is-flipped');
     });
+  } else {
+    btn.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-front card-front--locked">
+        <div class="card-corner top">
+          <span class="rank">${rank}</span>
+          <span class="suit">${symbol}</span>
+        </div>
+        <div class="card-role">${roleCn}</div>
+        <div class="card-avatar card-avatar--locked" aria-hidden="true">
+          <span class="card-lock-icon">\u{1F512}</span>
+        </div>
+        <div class="card-name card-name--locked">未解锁</div>
+        <div class="card-code card-code--locked">???</div>
+        <a class="card-unlock-cta" href="./index.html">去首页抽卡解锁</a>
+        <div class="card-corner bottom">
+          <span class="rank">${rank}</span>
+          <span class="suit">${symbol}</span>
+        </div>
+        <span class="card-locked-badge">未解锁</span>
+      </div>
+      <div class="card-face card-back card-back--locked">
+        <p class="back-locked-title">尚未解锁</p>
+        <p class="back-locked-hint">在首页「换一个 SBKPI 搭子」抽到本牌后即可翻面。</p>
+      </div>
+    </div>
+  `;
+    const cta = btn.querySelector('.card-unlock-cta');
+    if (cta) {
+      cta.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
   }
-
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('is-flipped');
-  });
   return btn;
 }
 
@@ -234,14 +279,17 @@ function applyFilters(cards) {
 
 /** @param {Record<string, string>[]} rows */
 function renderCards(rows) {
+  const unlockedIds = getUnlockedCardIds();
   const fragment = document.createDocumentFragment();
   const cards = rows.map((row) => {
-    const el = createCardEl(row);
+    const el = createCardEl(row, unlockedIds);
     fragment.appendChild(el);
     return el;
   });
   els.grid.replaceChildren(fragment);
   applyFilters(cards);
+  const unlockEl = document.getElementById('unlockCount');
+  if (unlockEl) unlockEl.textContent = String(unlockedIds.size);
   return cards;
 }
 
@@ -281,6 +329,8 @@ async function main() {
   const res = await fetch('./docs/persona-poker-deck.csv');
   const csv = await res.text();
   const allRows = parseCsv(csv);
+  const totalEl = document.getElementById('unlockTotal');
+  if (totalEl) totalEl.textContent = String(allRows.length);
   const currentCards = renderCards(sortByPersona(allRows));
 
   applyPokerRoute(currentCards);

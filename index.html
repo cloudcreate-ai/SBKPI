@@ -64,6 +64,12 @@
       line-height: 1.5;
     }
     .btn-draw {
+      display: inline-flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       width: 100%;
       padding: 14px 18px;
       border: 0;
@@ -75,13 +81,75 @@
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(77, 106, 83, 0.22);
     }
+    .btn-draw-main {
+      flex: 0 0 auto;
+      line-height: 1.2;
+    }
+    .btn-draw-unlock {
+      flex: 0 1 auto;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: 1.2;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.02em;
+    }
     .btn-draw:active { transform: scale(0.98); }
     .draw-result { margin-top: 16px; }
     .draw-result-inner { display: flex; flex-direction: column; align-items: center; gap: 16px; }
     .land-poker-slot {
+      position: relative;
       width: 100%;
       max-width: 260px;
       margin: 0 auto;
+    }
+    .land-poker-slot .land-poker {
+      position: relative;
+      z-index: 0;
+    }
+    .draw-new-unlock {
+      position: absolute;
+      left: 50%;
+      top: 15px;
+      z-index: 4;
+      transform: translateX(-50%);
+      padding: 5px 9px 5px 11px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.28);
+      background: linear-gradient(180deg, #f05a4a 0%, #c92a2a 100%);
+      border: 1.5px solid rgba(255, 210, 120, 0.95);
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.18),
+        0 4px 12px rgba(180, 40, 35, 0.22);
+      white-space: nowrap;
+      pointer-events: none;
+      animation: draw-unlock-pop 0.42s ease;
+    }
+    .draw-new-unlock-bang {
+      display: inline-block;
+      margin-left: 1px;
+      font-weight: 900;
+      font-size: 1.05em;
+      line-height: 1;
+      transform: translateY(-0.04em);
+    }
+    @keyframes draw-unlock-pop {
+      0% {
+        transform: translateX(-50%) scale(0.88);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .draw-new-unlock {
+        animation: none;
+      }
     }
     .land-poker {
       width: 100%;
@@ -290,6 +358,12 @@
       border-color: transparent;
     }
     .land-nav-btn.primary:hover { filter: brightness(1.05); }
+    .land-nav-unlock {
+      font-weight: 600;
+      font-size: 0.82em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
     .land-design p,
     .land-legal p {
       margin: 0 0 10px;
@@ -325,7 +399,10 @@
     <section class="card" aria-labelledby="draw-title">
       <h1 id="draw-title" class="land-draw-hero-title">挑选你的SBKPI搭子</h1>
       <p class="land-hint">从 SBKPI 牌堆随机抽一张，看看你的 SBKPI搭子，不喜欢可以换。</p>
-      <button type="button" id="drawCardBtn" class="btn-draw">换一个</button>
+      <button type="button" id="drawCardBtn" class="btn-draw">
+        <span class="btn-draw-main">换一个 SBKPI 搭子</span>
+        <span id="drawBtnUnlock" class="btn-draw-unlock" aria-hidden="true"></span>
+      </button>
       <div id="drawCardResult" class="draw-result" hidden></div>
     </section>
 
@@ -334,7 +411,7 @@
       <div class="land-nav-grid">
         <a class="land-nav-btn primary" href="./sbti.html">SBTI 人格测验</a>
         <a class="land-nav-btn" href="./wiki.html">SBTI 人格图鉴</a>
-        <a class="land-nav-btn" href="./sbpki.html">SBKPI搭子图鉴</a>
+        <a class="land-nav-btn" href="./sbpki.html" id="navSbpkiGallery">SBKPI搭子图鉴<span id="navGalleryUnlock" class="land-nav-unlock" aria-hidden="true"></span></a>
       </div>
     </nav>
 
