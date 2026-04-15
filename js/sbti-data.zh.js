@@ -4,8 +4,8 @@
  */
 
 export const config = {
-  drunkTriggerQuestionId: 'drink_gate_q2',
-  drinkGateQuestionId: 'drink_gate_q1',
+  drunkTriggerQuestionId: 'q32',
+  drinkGateQuestionId: 'q31',
   drinkGateInsertValue: 3,
 };
 
@@ -396,9 +396,9 @@ export const questions = [
     ];
 export const specialQuestions = [
       {
-        id: 'drink_gate_q1',
+        id: 'q31',
         special: true,
-        kind: 'drink_gate',
+        kind: 'drink_hobby',
         text: '您平时有什么爱好？',
         options: [
           { label: '吃喝拉撒', value: 1 },
@@ -408,13 +408,14 @@ export const specialQuestions = [
         ]
       },
       {
-        id: 'drink_gate_q2',
+        id: 'q32',
         special: true,
-        kind: 'drink_trigger',
+        kind: 'drink_attitude',
         text: '您对饮酒的态度是？',
         options: [
           { label: '小酌怡情，喝不了太多。', value: 1 },
-          { label: '我习惯将白酒灌在保温杯，当白开水喝，酒精令我信服。', value: 2 }
+          { label: '我习惯将白酒灌在保温杯，当白开水喝，酒精令我信服。', value: 2 },
+          { label: '非必要不喝酒。', value: 3 }
         ]
       }
     ];

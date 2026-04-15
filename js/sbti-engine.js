@@ -13,18 +13,18 @@ export function shuffle(array) {
 }
 
 /**
- * 将常规题洗牌并随机插入饮酒 gate 题（specialQuestions[0]）
+ * 将全部题目（含饮酒题）统一洗牌，均为必答
  * @param {object[]} regularQuestions
  * @param {object[]} specialQuestions
  */
 export function buildShuffledQuestions(regularQuestions, specialQuestions) {
-  const shuffledRegular = shuffle(regularQuestions);
-  const insertIndex = Math.floor(Math.random() * shuffledRegular.length) + 1;
-  return [
-    ...shuffledRegular.slice(0, insertIndex),
-    specialQuestions[0],
-    ...shuffledRegular.slice(insertIndex),
-  ];
+  const [q31, q32] = specialQuestions;
+  const base = shuffle([...regularQuestions]);
+  const pos31 = Math.floor(Math.random() * (base.length + 1));
+  base.splice(pos31, 0, q31);
+  const pos32 = pos31 + 1 + Math.floor(Math.random() * (base.length - pos31));
+  base.splice(pos32, 0, q32);
+  return base;
 }
 
 /**
@@ -32,7 +32,7 @@ export function buildShuffledQuestions(regularQuestions, specialQuestions) {
  * @param {Record<string, number>} answers
  * @param {object[]} specialQuestions
  * @param {string} drinkGateQuestionId
- * @param {number} drinkGateInsertValue 选中该分值时在 gate 后插入 follow-up
+ * @param {number} drinkGateInsertValue
  */
 export function getVisibleQuestions(
   shuffledQuestions,
@@ -41,12 +41,7 @@ export function getVisibleQuestions(
   drinkGateQuestionId,
   drinkGateInsertValue,
 ) {
-  const visible = [...shuffledQuestions];
-  const gateIndex = visible.findIndex((q) => q.id === drinkGateQuestionId);
-  if (gateIndex !== -1 && answers[drinkGateQuestionId] === drinkGateInsertValue) {
-    visible.splice(gateIndex + 1, 0, specialQuestions[1]);
-  }
-  return visible;
+  return [...shuffledQuestions];
 }
 
 /** @param {number} score */

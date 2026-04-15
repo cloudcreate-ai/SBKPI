@@ -331,9 +331,6 @@ function renderStep() {
     input.addEventListener('change', (e) => {
       const v = Number(e.target.value);
       app.answers[q.id] = v;
-      if (q.id === config.drinkGateQuestionId && v !== config.drinkGateInsertValue) {
-        delete app.answers[config.drunkTriggerQuestionId];
-      }
       scheduleGoForward(q);
     });
     // 后退后重点同一选项时 change 不触发，用 click + 快照区分「改选」与「确认原选项」

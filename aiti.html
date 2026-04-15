@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
+  <title>给 AI 的 SBTI 人格测试</title>
+  <style>
+    :root {
+      --bg: #f6faf6;
+      --panel: #ffffff;
+      --text: #1e2a22;
+      --muted: #6a786f;
+      --line: #dbe8dd;
+      --soft: #edf6ef;
+      --accent: #6c8d71;
+      --accent-strong: #4d6a53;
+      --shadow: 0 12px 32px rgba(47, 73, 55, 0.08);
+      --radius: 20px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-t: env(safe-area-inset-top, 0px);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, #f8fff8 0, #f6faf6 40%, #f2f7f3 100%);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-top: var(--safe-t);
+    }
+    .shell {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 16px 14px calc(24px + var(--safe-b));
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 18px 22px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    /* 页面主标题与各步标题：同字号字重，与流程卡片一致 */
+    .page-title,
+    .section-title {
+      margin-bottom: 10px;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--accent-strong);
+      line-height: 1.35;
+    }
+    .intro-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .top-link {
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-strong);
+      text-decoration: none;
+      margin-bottom: 12px;
+      padding: 2px 0;
+      border-radius: 8px;
+    }
+    .top-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .form-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      align-items: center;
+    }
+    .form-row-tight {
+      margin-top: 8px;
+      justify-content: flex-end;
+    }
+    .prompt-mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .prompt-mode-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--accent-strong);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 40px;
+    }
+    .prompt-mode-btn.active {
+      background: var(--accent-strong);
+      color: #fff;
+      border-color: var(--accent-strong);
+    }
+    .seed-input {
+      min-width: 220px;
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 0.86rem;
+      min-height: 44px;
+      background: #fcfefc;
+      color: var(--text);
+    }
+    button {
+      border: 0;
+      cursor: pointer;
+      transition: transform .14s ease, box-shadow .14s ease, opacity .14s ease;
+      font: inherit;
+      touch-action: manipulation;
+    }
+    button:disabled { cursor: not-allowed; opacity: 0.5; }
+    button:active:not(:disabled) { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--accent-strong);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(77, 106, 83, 0.2);
+      font-weight: 700;
+      min-height: 48px;
+    }
+    .btn-secondary {
+      background: #fff;
+      color: var(--accent-strong);
+      padding: 14px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      font-weight: 700;
+      min-height: 48px;
+    }
+    .hint {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    /* 挑选问卷、称呼/模型等：标签与单行框与 .hint 档位一致 */
+    .aiti-field-group label {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      resize: vertical;
+      background: #fcfefc;
+      color: #243229;
+    }
+    .error {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(180, 55, 50, 0.3);
+      color: #9e2a2a;
+      background: #fff8f7;
+      font-size: 0.88rem;
+    }
+    /* 全站统一页脚（与 sbti.html 一致） */
+    .site-footer {
+      margin-top: 14px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.65;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .site-footer-nav,
+    .site-footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .site-footer-meta {
+      font-size: 0.82rem;
+    }
+    .site-footer a {
+      color: var(--accent-strong);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .site-footer-sep {
+      color: #b8c9bc;
+      font-weight: 700;
+      user-select: none;
+    }
+    @media (min-width: 480px) {
+      .shell { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="card">
+      <a class="top-link" href="/">← 返回首页</a>
+      <h1 class="page-title">给 AI 的 SBTI 人格测试</h1>
+      <p class="intro-desc">流程：选问卷 → AI 读取文本问卷作答 → 按位答案串拼接 URL → 打开结果页。</p>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">1) 挑选问卷</h2>
+      <div class="aiti-field-group">
+        <div class="form-row">
+          <label for="setListInput">编号列表</label>
+          <input id="setListInput" class="seed-input" type="text" value="01-99" placeholder="如: 01-10,15,20-25" />
+        </div>
+        <p class="hint">校验专用问卷 `00` 为固定顺序（q1→q32），仅支持手动输入到“当前编号”，不会被随机选择。</p>
+        <div class="form-row">
+          <label for="qsetInput">当前编号</label>
+          <input id="qsetInput" class="seed-input" type="text" value="01" style="max-width:180px;" />
+          <button id="randomSetBtn" type="button" class="btn-secondary">随机选择</button>
+          <button id="loadQuestionnaireBtn" type="button" class="btn-primary">加载问卷文本</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">2) 给 AI 的问卷文本</h2>
+      <p class="hint">协议：`Q|题号|题目|选项`。所有题目均为必答题，无条件占位。</p>
+      <textarea id="questionnaireOutput" spellcheck="false"></textarea>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">3) 给 AI 的指令模板</h2>
+      <p class="hint">可选两种模式：简短版（仅链接，信息暴露更少）或详细版（内置完整问卷，执行更稳定）。</p>
+      <div class="prompt-mode-row">
+        <button id="promptModeShortBtn" type="button" class="prompt-mode-btn active">简短版（链接）</button>
+        <button id="promptModeFullBtn" type="button" class="prompt-mode-btn">详细版（内置问卷）</button>
+      </div>
+      <textarea id="aiPromptShortTemplate" spellcheck="false" readonly style="min-height:120px;">你正在参与一个问卷调查，请从链接 {QUESTIONNAIRE_URL} 获取问卷信息，并按问卷文件内的规则完成作答与结果链接构造。</textarea>
+      <textarea id="aiPromptFullTemplate" spellcheck="false" readonly style="min-height:260px;display:none;"></textarea>
+      <div class="form-row form-row-tight">
+        <button id="copyPromptBtn" type="button" class="btn-secondary">复制指令模板</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">4) 填答案串并生成结果 URL</h2>
+      <p class="hint">答案串只允许 `1-4`，第 N 位对应问卷第 N 题。</p>
+      <p class="hint">也可直接粘贴标准串：`NAME=...;MODEL=...;ANSWER=...;LENGTH=...`，点击“解析标准串”。</p>
+      <textarea id="resultBundleInput" spellcheck="false" style="min-height:90px;" placeholder="SET=19;NAME=GitHub Copilot;MODEL=Claude Sonnet 4.6;ANSWER=233...;LENGTH=32"></textarea>
+      <div class="form-row form-row-tight">
+        <button id="parseBundleBtn" type="button" class="btn-secondary">解析标准串</button>
+      </div>
+      <textarea id="answerInput" spellcheck="false" style="min-height:100px;"></textarea>
+      <div class="aiti-field-group">
+        <div class="form-row">
+          <label for="respondentNameInput">你是谁/称呼（可空）</label>
+          <input id="respondentNameInput" class="seed-input" type="text" placeholder="不填则为：匿名未知" />
+        </div>
+        <div class="form-row">
+          <label for="respondentModelInput">你的模型（可空）</label>
+          <input id="respondentModelInput" class="seed-input" type="text" placeholder="不填则为：匿名未知" />
+        </div>
+      </div>
+      <div class="form-row">
+        <button id="openResultBtn" type="button" class="btn-primary">打开结果页</button>
+      </div>
+      <div id="errorBox" class="error" hidden></div>
+      <textarea id="resultUrl" spellcheck="false" readonly style="min-height:88px;margin-top:10px;"></textarea>
+    </section>
+
+    <footer class="site-footer" role="contentinfo">
+      <nav class="site-footer-nav" aria-label="主要页面">
+        <a href="/">首页</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbti">SBTI 测验</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/aiti.html" aria-current="page">给 AI 的 SBTI 人格测试</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/wiki">人格图鉴</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/sbkpi">搭子图鉴</a>
+      </nav>
+      <div class="site-footer-meta">
+        <a href="/aiti-result">SBTI AI 测试结果</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="https://thedecklab.com/">thedecklab.com</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="https://github.com/cloudcreate-ai/SBKPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/privacy">隐私说明</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">服务条款</a>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="./js/sbti-aiti.js"></script>
+</body>
+</html>
