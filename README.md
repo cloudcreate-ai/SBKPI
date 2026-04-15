@@ -58,6 +58,12 @@ npm run deploy
 
 **SBKPI 牌组设定**（红黑身份、矩阵排布、与图鉴关系等）：[docs/sbkpi-game-setting.md](docs/sbkpi-game-setting.md)。**玩法设计讨论稿**（PVE/KPI/槽位等，未实现，摘自对话整理）：[docs/sbkpi-play-design-discussion.md](docs/sbkpi-play-design-discussion.md)。
 
+## 开发日志
+
+记录与站点相关的**动机、脑洞与实现复盘**；长文以站外文章链接为主，仓库内仅作索引。
+
+1. **第一篇**：[好奇 AI Agent 会是什么 SBTI 人格，我 vibe 了一个给 AI 用的 SBTI 测试](https://xmanyou.com/sbti-test-for-ai/)
+
 ## 待定：卡牌游戏向扩展
 
 原本想基于 SBTI 人格做一套**卡牌游戏**（把测验与牌面串成可玩的规则）；实际推进后发现**复杂度超出预期**，核心**玩法也尚未定型**，因此当前站点以**图鉴与风味技能文案**为主，不作成完整的卡牌游戏规则书。
