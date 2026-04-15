@@ -5,6 +5,9 @@ node_modules
 logs
 *.log
 
+# Release构建产物
+release/*.zip
+
 # Misc
 .DS_Store
 .fleet

@@ -8,9 +8,11 @@
     "start": "serve . -l 3000 --no-request-logging",
     "dev": "npm run start",
     "preview": "npm run start",
-    "serve": "npm run start"
+    "serve": "npm run start",
+    "release:zip": "node scripts/make-release-zip.mjs"
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "serve": "^14.2.4"
   }
 }

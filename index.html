@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>SBTI 人格测试</title>
+  <title>挑选你的SBKPI搭子 · SBKPI</title>
   <style>
     :root {
       --bg: #f6faf6;
@@ -18,8 +18,9 @@
       --radius: 20px;
       --safe-b: env(safe-area-inset-bottom, 0px);
       --safe-t: env(safe-area-inset-top, 0px);
+      --red-card: #b83c3c;
+      --black-card: #2c3d35;
     }
-
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
@@ -30,703 +31,337 @@
       min-height: 100dvh;
       padding-top: var(--safe-t);
     }
-
     .shell {
       max-width: 560px;
       margin: 0 auto;
-      padding: 16px 14px calc(24px + var(--safe-b));
+      padding: 16px 14px calc(28px + var(--safe-b));
     }
-
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      padding: 22px 18px;
+      margin-bottom: 14px;
     }
-
-    .screen { display: none; }
-    .screen.active { display: block; }
-
-    /* —— 首页 —— */
-    .hero {
-      padding: 28px 20px 24px;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: clamp(1.45rem, 5.5vw, 2rem);
-      line-height: 1.25;
+    .land-draw-hero-title {
+      font-size: clamp(1.35rem, 5.5vw, 1.95rem);
+      margin: 0 0 12px;
       letter-spacing: -0.02em;
-      margin: 0 0 20px;
-    }
-    .intro-actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-    .intro-actions-row .btn-primary,
-    .intro-actions-row .btn-secondary {
-      flex: 1;
-      min-width: 132px;
-      max-width: 100%;
-    }
-    .intro-history {
-      margin-top: 16px;
-      text-align: left;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 0 12px 12px;
-      background: linear-gradient(180deg, #fbfffb, #f5faf6);
-    }
-    .intro-history summary {
-      cursor: pointer;
-      list-style: none;
-      font-size: 0.95rem;
+      color: var(--accent-strong);
       font-weight: 700;
+      line-height: 1.25;
+    }
+    .land-section-title {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
       color: var(--accent-strong);
-      padding: 14px 4px 12px;
     }
-    .intro-history summary::-webkit-details-marker { display: none; }
-    /* 历史区内：最近一次人格卡片（布局同结果页 result-top） */
-    .intro-latest-wrap { margin-bottom: 12px; }
-    .intro-latest-wrap .poster-image { max-height: 240px; }
-    .intro-latest-wrap .intro-history-view-btn {
-      margin-top: 12px;
-      margin-bottom: 0;
+    .land-hint {
+      margin: 0 0 14px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
     }
-    /* 完整结果入口，低调次要样式 */
-    .intro-history-view-btn {
+    .btn-draw {
       width: 100%;
-      background: var(--panel);
-      color: var(--muted);
-      border: 1px solid var(--line);
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      min-height: 44px;
-      box-shadow: none;
-      text-align: center;
-    }
-    .intro-history-view-btn:hover {
-      color: var(--accent-strong);
-      border-color: #c5d8c9;
-      background: #fafcfb;
-    }
-    .intro-history-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .intro-history-list li { margin-top: 8px; }
-    .history-item-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--soft);
-    }
-    .history-item-meta {
-      flex: 1;
-      min-width: 0;
-      font-size: 0.85rem;
-      color: var(--text);
-      line-height: 1.35;
-    }
-    .history-item-view-btn {
-      flex-shrink: 0;
-      padding: 8px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--accent-strong);
-      font: inherit;
-      font-size: 0.8rem;
-      font-weight: 600;
-      min-height: 36px;
-      touch-action: manipulation;
-    }
-    .history-item-view-btn:active {
-      opacity: 0.92;
-    }
-    /* 历史区块下方：低调红色描边，清除本机数据 */
-    .intro-clear-all-btn {
-      display: block;
-      width: 100%;
-      margin-top: 12px;
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(180, 55, 50, 0.38);
-      background: #fff;
-      color: #9e2a2a;
-      font: inherit;
-      font-size: 0.8rem;
-      font-weight: 600;
-      box-shadow: none;
-      touch-action: manipulation;
-    }
-    .intro-clear-all-btn:hover {
-      background: #fff8f7;
-      border-color: rgba(180, 55, 50, 0.5);
-    }
-    .intro-clear-all-btn:active {
-      opacity: 0.92;
-    }
-    .intro-privacy-note {
-      margin: 10px 0 0;
-      font-size: 0.78rem;
-      line-height: 1.55;
-      color: var(--muted);
-      text-align: center;
-    }
-    .intro-gallery-row {
-      margin-top: 14px;
-      text-align: center;
-    }
-    .intro-gallery-row + .intro-gallery-row {
-      margin-top: 6px;
-    }
-    .intro-gallery-link {
-      display: inline-block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--accent-strong);
-      text-decoration: none;
-      padding: 6px 4px;
-      border-radius: 8px;
-    }
-    .intro-gallery-link:hover {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-    .author-note {
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .intro-author-original-link {
-      margin-left: 0.25em;
-      color: var(--accent-strong);
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .intro-author-original-link:hover {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    button {
+      padding: 14px 18px;
       border: 0;
-      cursor: pointer;
-      transition: transform .14s ease, box-shadow .14s ease, opacity .14s ease;
-      font: inherit;
-      touch-action: manipulation;
-    }
-    button:disabled { cursor: not-allowed; opacity: 0.5; }
-    button:active:not(:disabled) { transform: scale(0.98); }
-
-    .btn-primary {
+      border-radius: 14px;
       background: var(--accent-strong);
       color: #fff;
-      padding: 14px 22px;
-      border-radius: 14px;
-      box-shadow: 0 10px 24px rgba(77, 106, 83, 0.2);
+      font: inherit;
       font-weight: 700;
-      min-height: 48px;
-    }
-    .btn-secondary {
-      background: #fff;
-      color: var(--accent-strong);
-      padding: 14px 20px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      font-weight: 700;
-      min-height: 48px;
-    }
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      padding: 10px 12px;
-      font-size: 0.9rem;
-      min-height: 44px;
-    }
-
-    /* —— 向导 —— */
-    .wizard-card-wrap {
-      padding-bottom: 8px;
-    }
-    .wizard-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .wizard-head .wizard-prev-top {
-      padding: 10px 14px;
-      min-height: 40px;
-      font-size: 0.88rem;
-      border-radius: 12px;
-    }
-    .wizard-progress-track {
-      height: 8px;
-      background: #edf3ee;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-    .wizard-progress-track > span {
-      display: block;
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, #97b59c, #5b7a62);
-      border-radius: inherit;
-      transition: width .2s ease;
-    }
-    .wizard-progress-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-    .question-card {
-      padding: 4px 2px 8px;
-    }
-    .question-meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 11px;
-      border-radius: 999px;
-      background: var(--soft);
-      border: 1px solid var(--line);
-      font-weight: 600;
-      color: var(--accent-strong);
-    }
-    .question-title {
-      font-size: 1.05rem;
-      line-height: 1.65;
-      margin: 0 0 16px;
-      white-space: pre-wrap;
-      font-weight: 650;
-    }
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      --option-selected-bg: #e8f1ea;
-      /* --option-fill-ms 由内联样式与 JS 中 ADVANCE_DELAY_MS 同步 */
-    }
-    .option {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px 14px;
-      min-height: 52px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fff;
       cursor: pointer;
-      overflow: hidden;
-      transition: border-color 0.18s ease, background 0.18s ease;
+      box-shadow: 0 10px 24px rgba(77, 106, 83, 0.22);
     }
-    /* 选中且未在播放：整卡已是浅绿底 */
-    .option:has(input:checked):not(.option--progress) {
-      border-color: rgba(77, 106, 83, 0.22);
-      background: var(--option-selected-bg);
+    .btn-draw:active { transform: scale(0.98); }
+    .draw-result { margin-top: 16px; }
+    .draw-result-inner { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .land-poker-slot {
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto;
     }
-    /* 播放进度中：底为白，浅绿由 fill 从左向右铺满 */
-    .option.option--progress:has(input:checked) {
-      border-color: var(--line);
-      background: #fff;
+    .land-poker {
+      width: 100%;
+      perspective: 1000px;
+      text-align: left;
+      font: inherit;
+      color: inherit;
     }
-    .option-fill {
+    .land-poker-inner {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 63 / 88;
+      transform-style: preserve-3d;
+    }
+    .land-poker-front {
       position: absolute;
       inset: 0;
-      width: 100%;
-      transform: scaleX(0);
-      transform-origin: left center;
-      border-radius: inherit;
-      background: var(--option-selected-bg);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .option--progress .option-fill {
-      animation: option-fill-wipe var(--option-fill-ms, 560ms) linear forwards;
-    }
-    @keyframes option-fill-wipe {
-      from {
-        transform: scaleX(0);
-      }
-      to {
-        transform: scaleX(1);
-      }
-    }
-    .option.option--progress:has(input:checked) .option-code {
-      color: #3d5a42;
-    }
-    .option.option--progress:has(input:checked) .option-text {
-      font-weight: 600;
-      color: var(--text);
-    }
-    .option:has(input:checked):not(.option--progress) .option-code {
-      color: #3d5a42;
-    }
-    .option:has(input:checked):not(.option--progress) .option-text {
-      font-weight: 600;
-      color: var(--text);
-    }
-    .option input,
-    .option .option-code,
-    .option .option-text {
-      position: relative;
-      z-index: 1;
-    }
-    .option input {
-      margin-top: 3px;
-      accent-color: var(--accent-strong);
-      width: 1.15rem;
-      height: 1.15rem;
-      flex-shrink: 0;
-    }
-    .option-code {
-      font-weight: 800;
-      min-width: 1.25rem;
-      flex-shrink: 0;
-    }
-    /* 未选中：字母不用深绿，避免与选中/进度形成第三种强调色 */
-    .option:not(:has(input:checked)) .option-code {
-      color: var(--muted);
-    }
-    .option-text {
-      flex: 1;
-      line-height: 1.55;
-      font-size: 0.95rem;
-    }
-    .wizard-hint {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin: 18px 0 8px;
-      min-height: 2.6em;
-    }
-
-    /* —— 结果 —— */
-    .result-wrap { padding: 18px 16px 24px; }
-    .result-top {
+      border-radius: 14px;
+      border: 0.8px solid #d6dfd8;
+      background: var(--panel);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      padding: 10px 10px 8px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-    }
-    .poster-box {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-      background: linear-gradient(180deg, #ffffff, #f7fbf8);
-      overflow: hidden;
-    }
-    .poster-type-banner {
+      align-items: center;
       text-align: center;
-      margin-bottom: 12px;
     }
-    .poster-type-lead {
-      font-size: 14px;
-      color: #5a6b62;
-      margin-bottom: 6px;
-      line-height: 1.35;
-    }
-    .poster-type-name {
-      font-size: clamp(1.1rem, 4vw, 1.45rem);
+    .land-poker .lp-corner {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-weight: 800;
-      color: var(--text);
-      line-height: 1.2;
+      line-height: 1;
+      width: 34px;
+      z-index: 2;
     }
-    .poster-type-code {
-      font-size: clamp(1.2rem, 4.2vw, 1.6rem);
-      font-weight: 800;
-      color: var(--accent-strong);
-      letter-spacing: 0.02em;
-      margin-top: 4px;
+    .land-poker .lp-corner.top { top: 6px; left: 5px; }
+    .land-poker .lp-corner.bottom { bottom: 6px; right: 5px; transform: rotate(180deg); }
+    .land-poker .lp-rank { font-size: 1.06rem; letter-spacing: -0.02em; }
+    .land-poker .lp-suit { font-size: 1.14rem; margin-top: 1px; }
+    .land-poker.is-red .lp-rank,
+    .land-poker.is-red .lp-suit { color: #b30000; }
+    .land-poker.is-black .lp-rank,
+    .land-poker.is-black .lp-suit { color: #121212; }
+    .land-poker.is-joker .lp-corner { width: 34px; align-items: center; }
+    .land-poker.is-joker .lp-corner.top { top: 5px; left: 4px; }
+    .land-poker.is-joker .lp-corner.bottom { bottom: 5px; right: 4px; transform: rotate(180deg); }
+    .land-poker.is-joker .lp-rank {
+      font-size: 0.68rem;
+      letter-spacing: 0.01em;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      line-height: 1;
     }
-    .poster-figure {
-      border-radius: 12px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.85);
+    .land-poker.is-joker .lp-suit { display: none; }
+    .land-poker .lp-role {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      font-size: 0.62rem;
+      color: #8a978f;
+      letter-spacing: 0.06em;
+      z-index: 2;
     }
-    .poster-box.no-image .poster-figure { display: none; }
-    .poster-image {
+    .land-poker .lp-avatar {
+      margin-top: 34px;
+      height: 58%;
       width: 100%;
-      max-height: 320px;
-      object-fit: contain;
-      border-radius: 12px;
-      background: transparent;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .land-poker .lp-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
     }
-    .poster-caption {
-      margin-top: 12px;
-      font-size: 14px;
+    .land-poker .lp-name {
+      margin-top: 8px;
+      font-weight: 800;
+      font-size: 0.98rem;
+      letter-spacing: -0.01em;
+      width: 100%;
+      text-align: center;
+    }
+    .land-poker .lp-code {
+      margin-top: 2px;
+      font-size: 0.72rem;
       color: var(--muted);
-      line-height: 1.7;
-    }
-    .type-box {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      background: linear-gradient(180deg, #ffffff, #fbfdfb);
-    }
-    .type-kicker {
-      font-size: 12px;
-      color: var(--accent-strong);
-      margin-bottom: 6px;
+      font-weight: 600;
+      width: 100%;
+      text-align: center;
       letter-spacing: 0.04em;
     }
-    .type-name {
-      font-size: clamp(1.35rem, 5vw, 1.85rem);
-      line-height: 1.15;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    .draw-below {
+      width: 100%;
+      max-width: 100%;
+      text-align: left;
     }
-    .match {
-      margin-top: 14px;
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--soft);
-      border: 1px solid var(--line);
-      color: var(--accent-strong);
-      font-weight: 700;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .type-subname {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-    .analysis-box, .dim-box, .note-box {
-      margin-top: 16px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      background: linear-gradient(180deg, #ffffff, #fbfdfb);
-    }
-    .analysis-box h3, .dim-box h3, .note-box h3 {
+    .draw-below-meta {
       margin: 0 0 12px;
-      font-size: 16px;
-    }
-    .analysis-box p {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.85;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--line);
+      font-size: 0.88rem;
+      line-height: 1.55;
       color: #304034;
-      white-space: pre-wrap;
     }
-    .dim-list { display: flex; flex-direction: column; gap: 10px; }
-    .dim-item {
+    .draw-below-meta p { margin: 0 0 6px; }
+    .draw-below-meta p:last-child { margin-bottom: 0; }
+    .draw-quote { font-weight: 600; color: #20342a; }
+    /* 技能：独立卡片样式，与上方信息行区分 */
+    .draw-below-skill {
+      margin: 14px 0 0;
+      padding: 12px 14px 14px;
+      background: linear-gradient(165deg, var(--soft) 0%, #e5f0e8 100%);
       border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 12px 14px;
-      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
     }
-    .dim-item-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
-    }
-    .dim-item-name { font-size: 14px; font-weight: 700; }
-    .dim-item-score { font-size: 14px; font-weight: 800; color: var(--accent-strong); }
-    .dim-item p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-    .note-box p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-    details.author-box {
-      margin-top: 16px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: linear-gradient(180deg, #ffffff, #fbfdfb);
-      overflow: hidden;
-    }
-    .author-box summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 16px;
+    .draw-skill-label {
+      display: inline-block;
+      margin: 0 0 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
       font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+      background: var(--accent-strong);
+      line-height: 1.4;
+    }
+    .draw-skill-body {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      font-weight: 500;
+      color: #1f3328;
+    }
+    /* 人格：测验图鉴长文案，与技能卡片区分色系 */
+    .draw-below-persona {
+      margin: 14px 0 0;
+      padding: 12px 14px 14px;
+      background: linear-gradient(165deg, #faf9f6 0%, #f0eeea 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    .draw-persona-label {
+      display: inline-block;
+      margin: 0 0 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+      background: #5a6d5e;
+      line-height: 1.4;
+    }
+    .draw-persona-intro {
+      margin: 0 0 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #2a3d32;
+      line-height: 1.5;
+    }
+    .draw-persona-intro-inner { font-weight: 600; color: #20342a; }
+    .draw-persona-desc-wrap {
+      max-height: 12.5em;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 2px;
+    }
+    .draw-persona-desc {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: #3d4d44;
+    }
+    .land-nav-grid {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
     }
-    .author-box summary::-webkit-details-marker { display: none; }
-    .author-box summary::after {
-      content: '展开';
-      font-size: 12px;
+    .land-nav-btn {
+      display: block;
+      text-align: center;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
       color: var(--accent-strong);
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.95rem;
     }
-    .author-box[open] summary::after { content: '收起'; }
-    #authorContent {
-      border-top: 1px solid var(--line);
-      padding: 0 16px 16px;
-      font-size: 14px;
-      line-height: 1.85;
+    .land-nav-btn:hover { background: #fafcfb; border-color: #c5d8c9; }
+    .land-nav-btn.primary {
+      background: var(--accent-strong);
+      color: #fff;
+      border-color: transparent;
+    }
+    .land-nav-btn.primary:hover { filter: brightness(1.05); }
+    .land-design p,
+    .land-legal p {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      line-height: 1.65;
       color: #304034;
     }
-    #authorContent p { margin: 12px 0 0; }
-    .result-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
+    .land-design ul {
+      margin: 8px 0 0;
+      padding-left: 1.2rem;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #3d4f45;
     }
-    .result-actions button { flex: 1; min-width: 140px; }
-
-    @media (min-width: 480px) {
-      .shell { padding-left: 20px; padding-right: 20px; }
+    .land-footer {
+      margin-top: 8px;
+      padding: 16px 4px 0;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.6;
+      text-align: center;
     }
+    .land-footer a {
+      color: var(--accent-strong);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .land-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
   </style>
 </head>
 <body>
   <div class="shell">
-    <section id="intro" class="screen active">
-      <div class="hero card">
-        <h1 id="introTitle">SBTI</h1>
-        <div class="intro-actions-row" id="introActionsRow">
-          <button type="button" id="continueResumeBtn" class="btn-primary" hidden>继续测试</button>
-          <button type="button" id="startBtn" class="btn-secondary">开始测试</button>
-        </div>
-        <p class="intro-gallery-row">
-          <a class="intro-gallery-link" href="./wiki.html">SBTI 人格图鉴 · 浏览全部类型</a>
-        </p>
-        <p class="intro-gallery-row">
-          <a class="intro-gallery-link" href="./sbpki.html">SBKPI 图鉴 · 卡面展示</a>
-        </p>
-        <details class="intro-history" id="introHistory" hidden>
-          <summary id="introHistorySummary">历次结果</summary>
-          <div id="introLatestWrap" class="intro-latest-wrap" hidden>
-            <div class="result-top">
-              <div class="poster-box" id="introLatestPosterBox">
-                <div class="poster-type-banner">
-                  <div class="poster-type-lead" id="introPosterTypeLead"></div>
-                  <div class="poster-type-name" id="introPosterDisplayName"></div>
-                  <div class="poster-type-code" id="introPosterCodeLabel"></div>
-                </div>
-                <div class="poster-figure">
-                  <img id="introLatestPosterImg" class="poster-image" alt="" />
-                </div>
-                <div id="introLatestPosterCaption" class="poster-caption"></div>
-              </div>
-              <div class="type-box">
-                <div class="type-kicker" id="introLatestKicker"></div>
-                <div class="type-name" id="introLatestTypeName"></div>
-                <div class="match" id="introLatestBadge"></div>
-                <div class="type-subname" id="introLatestSub"></div>
-              </div>
-            </div>
-            <button type="button" id="viewLatestHistoryBtn" class="intro-history-view-btn" title="">
-              查看完整结果
-            </button>
-          </div>
-          <ul id="introHistoryList" class="intro-history-list"></ul>
-        </details>
-        <button type="button" id="clearAllLocalBtn" class="intro-clear-all-btn" hidden>
-          清除所有记录
-        </button>
-        <p class="intro-privacy-note" id="introPrivacyNote"></p>
-        <div class="author-note">
-          <span id="authorLine"></span><span class="author-note-sep" aria-hidden="true"> · </span><a id="authorOriginalLink" class="intro-author-original-link" href="#" target="_blank" rel="noopener noreferrer"></a>
-        </div>
-      </div>
+    <section class="card" aria-labelledby="draw-title">
+      <h1 id="draw-title" class="land-draw-hero-title">挑选你的SBKPI搭子</h1>
+      <p class="land-hint">从 SBKPI 牌堆随机抽一张，看看你的 SBKPI搭子，不喜欢可以换。</p>
+      <button type="button" id="drawCardBtn" class="btn-draw">换一个</button>
+      <div id="drawCardResult" class="draw-result" hidden></div>
     </section>
 
-    <section id="wizard" class="screen">
-      <div class="wizard-card-wrap">
-        <div class="card" style="padding: 16px 16px 8px;">
-          <div class="wizard-head">
-            <button type="button" id="wizardBackHome" class="btn-ghost">← 首页</button>
-            <button type="button" id="wizardPrev" class="btn-secondary wizard-prev-top">上一题</button>
-          </div>
-          <div class="wizard-progress-track"><span id="wizardProgressBar"></span></div>
-          <div class="wizard-progress-label" id="wizardProgressText">0 / 0</div>
-          <div id="wizardQuestionHost"></div>
-          <p class="wizard-hint" id="wizardHint"></p>
-        </div>
+    <nav class="card" aria-label="主要入口">
+      <h2 class="land-section-title">入口</h2>
+      <div class="land-nav-grid">
+        <a class="land-nav-btn primary" href="./sbti.html">SBTI 人格测验</a>
+        <a class="land-nav-btn" href="./wiki.html">SBTI 人格图鉴</a>
+        <a class="land-nav-btn" href="./sbpki.html">SBKPI搭子图鉴</a>
       </div>
+    </nav>
+
+    <section class="land-design card" aria-labelledby="design-title">
+      <h2 id="design-title" class="land-section-title">设计想法</h2>
+      <p>SBKPI 把 SBTI 做成可浏览的<strong>SBKPI搭子</strong>（图鉴 + 扑克牌面）：红色偏领导语境、黑色偏同事语境，技能条是卡牌向风味文案，方便以后若要做成<strong>卡牌游戏</strong>再扩展规则。</p>
+      <p>曾认真讨论过更完整的 <strong>PVE、KPI 进度、工作流槽位</strong> 等玩法，但复杂度较高，当前站点以<strong>展示与自嘲</strong>为主；思路备忘见仓库 <a href="https://github.com/cloudcreate-ai/SBKPI/blob/main/docs/sbkpi-play-design-discussion.md" target="_blank" rel="noopener noreferrer">玩法讨论稿</a>。</p>
+      <ul>
+        <li>测验数据仅保存在本机浏览器，不上传服务器。</li>
+        <li>创意致谢 B 站活动原作者与 SBTI-test 仓库；本变种与上游无隶属关系。</li>
+      </ul>
     </section>
 
-    <section id="result" class="screen">
-      <div class="result-wrap card">
-        <div class="result-top">
-          <div class="poster-box" id="posterBox">
-            <div class="poster-type-banner">
-              <div class="poster-type-lead" id="posterTypeLead"></div>
-              <div class="poster-type-name" id="posterTypeDisplayName"></div>
-              <div class="poster-type-code" id="posterTypeCodeLabel"></div>
-            </div>
-            <div class="poster-figure">
-              <img id="posterImage" class="poster-image" alt="" />
-            </div>
-            <div id="posterCaption" class="poster-caption"></div>
-          </div>
-          <div class="type-box">
-            <div class="type-kicker" id="resultModeKicker"></div>
-            <div class="type-name" id="resultTypeName"></div>
-            <div class="match" id="matchBadge"></div>
-            <div class="type-subname" id="resultTypeSub"></div>
-          </div>
-        </div>
-        <div class="analysis-box">
-          <h3 id="analysisTitle">该人格的简单解读</h3>
-          <p id="resultDesc"></p>
-        </div>
-        <div class="dim-box">
-          <h3 id="dimTitle">十五维度评分</h3>
-          <div id="dimList" class="dim-list"></div>
-        </div>
-        <div class="note-box">
-          <h3 id="noteTitle">友情提示</h3>
-          <p id="funNote"></p>
-        </div>
-        <details class="author-box">
-          <summary id="authorSummary">作者的话</summary>
-          <div id="authorContent"></div>
-        </details>
-        <div class="result-actions">
-          <button type="button" id="restartBtn" class="btn-secondary">再测一次</button>
-          <button type="button" id="toTopBtn" class="btn-primary">回到首页</button>
-        </div>
-      </div>
+    <section class="land-legal card" aria-labelledby="legal-title">
+      <h2 id="legal-title" class="land-section-title">项目声明</h2>
+      <p><strong>仅供娱乐。</strong>请勿用于心理诊断、职场评价、贴标签或任何严肃结论。</p>
+      <p><strong>AGI 声明：</strong>本站大量内容由 AI 辅助生成，并经人工审阅；仍可能有疏漏，欢迎在 GitHub 提 issue。</p>
+      <p>原作者未声明开源协议，本仓库亦未附 License；二次使用请自行把握尺度，勿打扰原作者。</p>
     </section>
+
+    <footer class="land-footer">
+      <a id="landSiteLink" href="https://sbpki.cloudcreate.ai">sbpki.cloudcreate.ai</a>
+      <span aria-hidden="true"> · </span>
+      <a id="landGhLink" href="https://github.com/cloudcreate-ai/SBKPI">GitHub</a>
+    </footer>
   </div>
 
-  <script type="module" src="./js/sbti-app.js"></script>
-  <script>
-    window.addEventListener('load', function () {
-      if (!window.__sbtiAppLoaded) {
-        var t = document.getElementById('introTitle');
-        var b = document.getElementById('startBtn');
-        if (t) t.textContent = '无法加载测验脚本，请用本地 HTTP 服务打开本目录（如 npx serve）。';
-        if (b) b.disabled = true;
-      }
-    });
-  </script>
+  <script type="module" src="./js/sbti-landing.js"></script>
+</body>
+</html>

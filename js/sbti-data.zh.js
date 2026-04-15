@@ -39,9 +39,16 @@ export const ui = {
     authorOriginalUrl: 'https://www.bilibili.com/blackboard/era/WijKT2bWuCJWPg8B.html',
     authorOriginalLinkText: 'B站原版',
     authorOriginalLinkTitle: '在 bilibili 打开原作者活动页',
+    /** 首页页脚 */
+    sitePublicUrl: 'https://sbpki.cloudcreate.ai',
+    sitePublicLabel: 'sbpki.cloudcreate.ai',
+    sitePublicTitle: '本站访问地址',
+    repoUrl: 'https://github.com/cloudcreate-ai/SBKPI',
+    repoLabel: 'GitHub',
+    repoTitle: 'SBKPI 源码仓库',
   },
   wizard: {
-    backHome: '返回首页',
+    backHome: '测验入口',
     prev: '上一题',
     hintNeedChoice: '选择后将自动进入下一题；可点「上一题」返回修改。',
     hintAdvancing: '选项背景进度条走完后进入下一题…',
@@ -59,7 +66,7 @@ export const ui = {
     noteTitle: '友情提示',
     authorSummary: '作者的话',
     restart: '再测一次',
-    toIntro: '回到首页',
+    toIntro: '回到 SBKPI 首页',
     posterAlt: '人格结果图',
   },
   compute: {

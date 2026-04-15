@@ -495,6 +495,18 @@ function applyStaticLabels() {
     authorOrig.textContent = ui.intro.authorOriginalLinkText || '';
     authorOrig.title = ui.intro.authorOriginalLinkTitle || '';
   }
+  const siteLink = document.getElementById('introSiteLink');
+  if (siteLink && ui.intro.sitePublicUrl) {
+    siteLink.href = ui.intro.sitePublicUrl;
+    siteLink.textContent = ui.intro.sitePublicLabel || '';
+    siteLink.title = ui.intro.sitePublicTitle || '';
+  }
+  const ghLink = document.getElementById('introGithubLink');
+  if (ghLink && ui.intro.repoUrl) {
+    ghLink.href = ui.intro.repoUrl;
+    ghLink.textContent = ui.intro.repoLabel || '';
+    ghLink.title = ui.intro.repoTitle || '';
+  }
   const privacy = document.getElementById('introPrivacyNote');
   if (privacy) privacy.textContent = ui.intro.localDataPrivacy;
   els.wizardBackHome.textContent = `← ${ui.wizard.backHome}`;
@@ -541,7 +553,20 @@ els.viewLatestHistoryBtn.addEventListener('click', () => {
 });
 els.wizardBackHome.addEventListener('click', goIntro);
 els.restartBtn.addEventListener('click', () => startTest(false));
-els.toTopBtn.addEventListener('click', goIntro);
+/** 结果页回到站点首页（index.html），并结束本次测验会话 */
+function goSiteHome() {
+  if (screens.result.classList.contains('active')) {
+    clearProgress();
+    app.shuffledQuestions = [];
+    app.answers = {};
+    app.stepIndex = 0;
+    clearAdvanceTimer();
+  } else {
+    persistProgressFromApp();
+  }
+  window.location.href = './index.html';
+}
+els.toTopBtn.addEventListener('click', goSiteHome);
 
 applyStaticLabels();
 renderResultAuthorNotes();
