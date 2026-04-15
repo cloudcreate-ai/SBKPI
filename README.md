@@ -48,8 +48,8 @@ npm run deploy
 | ------------ | ---------------------------- |
 | `index.html` | SBKPI 首页：随机抽卡、设计想法、项目声明与入口导航 |
 | `sbti.html`  | SBTI 人格测验（向导式答题）             |
-| `aiti.html`  | SBTI AI 测试（静态问卷文本 + 数字答案串 URL） |
-| `aiti-result.html`  | SBTI AI 结果页（按位答案解析 + 本地计算 + AI 元数据） |
+| `aiti.html`  | 给 AI 的 SBTI 人格测试（静态问卷文本 + 数字答案串 URL）；说明与截图见 [docs/aiti-sbti-testing.md](docs/aiti-sbti-testing.md) |
+| `aiti-result.html`  | SBTI AI 测试结果页（按位答案解析 + 本地计算 + AI 元数据）；同上文档含示例结果链接 |
 | `wiki.html`  | SBTI 人格图鉴：类型介绍与海报            |
 | `sbkpi.html` | SBKPI 图鉴：54 张牌面与人格技能风味文案     |
 | `privacy.html` | 隐私说明 |
