@@ -47,14 +47,113 @@ function rankLabel(rank) {
 }
 
 /**
- * 动效结束后，把问号占位替换为真实内容。
+ * 统一抽卡骨架：首次加载与后续抽卡均复用同一 DOM 结构。
+ * @param {HTMLElement} host
+ */
+function renderDrawSkeleton(host) {
+  host.innerHTML = `
+      <div class="draw-result-inner" aria-hidden="true">
+        <div class="land-poker-slot">
+          <div class="land-poker-deal">
+            <div class="land-poker is-black">
+              <div class="land-poker-inner land-poker-inner--from-back">
+                <div class="land-poker-back" aria-hidden="true">
+                  <span class="land-poker-back-logo">SBKPI</span>
+                </div>
+                <div class="land-poker-front">
+                  <div class="lp-corner top">
+                    <span class="lp-rank">?</span>
+                    <span class="lp-suit">?</span>
+                  </div>
+                  <div class="lp-role">??</div>
+                  <div class="lp-avatar" aria-hidden="true"></div>
+                  <div class="lp-name">????</div>
+                  <div class="lp-code">??</div>
+                  <div class="lp-corner bottom">
+                    <span class="lp-rank">?</span>
+                    <span class="lp-suit">?</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="draw-below">
+          <div class="draw-below-meta">
+            <p>牌面：??</p>
+            <p>人格：<strong>????</strong>（??）</p>
+            <p>身份：??</p>
+            <p>口头禅：“?????”</p>
+          </div>
+          <div class="draw-below-skill" role="note" aria-label="技能">
+            <span class="draw-skill-label">技能</span>
+            <p class="draw-skill-body">?????</p>
+          </div>
+          <div class="draw-below-persona" role="region" aria-label="人格">
+            <span class="draw-persona-label">人格</span>
+            <p class="draw-persona-intro">“<span class="draw-persona-intro-inner">???? · ????</span>”</p>
+            <div class="draw-persona-desc-wrap">
+              <p class="draw-persona-desc">?????
+?????
+?????
+?????</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  host.hidden = false;
+}
+
+/**
+ * 占位字段的短动画：从问号滚动过渡到真实值。
+ * @param {HTMLElement} el
+ * @param {string} finalText
+ * @param {number} durationMs
+ */
+function animateRollingText(el, finalText, durationMs = 280) {
+  const finalValue = String(finalText ?? '');
+  const fromValue = String(el.textContent ?? '');
+  if (!fromValue.includes('?') || !finalValue) {
+    el.textContent = finalValue;
+    return;
+  }
+
+  // 长段落直接替换，避免动画过长造成阅读干扰。
+  if (finalValue.length > 32 || finalValue.includes('\n')) {
+    el.textContent = finalValue;
+    return;
+  }
+
+  const startedAt = performance.now();
+  const maxLen = Math.max(finalValue.length, fromValue.replace(/\s+/g, '').length || 0);
+  const randomPool = ['?', '？', '*', '#', '·'];
+
+  const tick = (now) => {
+    const p = Math.min(1, (now - startedAt) / durationMs);
+    const revealed = Math.floor(finalValue.length * p);
+    const restLen = Math.max(0, maxLen - revealed);
+    const rest = Array.from({ length: restLen }, (_, i) => randomPool[(i + revealed) % randomPool.length]).join('');
+    el.textContent = `${finalValue.slice(0, revealed)}${rest}`;
+    if (p < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      el.textContent = finalValue;
+    }
+  };
+
+  requestAnimationFrame(tick);
+}
+
+/**
+ * 动效结束后，把问号占位替换为真实内容（带短滚动揭晓）。
  * @param {HTMLElement} host
  * @param {Record<string, string>} fields
  */
 function applyRevealFields(host, fields) {
   Object.entries(fields).forEach(([key, value]) => {
     host.querySelectorAll(`[data-draw-field="${key}"]`).forEach((el) => {
-      el.textContent = value;
+      animateRollingText(el, value);
     });
   });
 }
@@ -63,8 +162,10 @@ function applyRevealFields(host, fields) {
  * 抽卡揭晓：发牌飞入（~0.5s）+ 翻面（~0.5s），翻面后替换占位符。
  * @param {HTMLElement} host
  * @param {Record<string, string>} revealFields
+ * @param {{ skipDeal?: boolean }} [opts]
  */
-function queueDrawReveal(host, revealFields) {
+function queueDrawReveal(host, revealFields, opts = {}) {
+  const { skipDeal = false } = opts;
   const dealWrap = host.querySelector('.land-poker-deal');
   const inner = host.querySelector('.land-poker-inner');
   const badge = host.querySelector('.draw-new-unlock');
@@ -75,12 +176,6 @@ function queueDrawReveal(host, revealFields) {
     btn.disabled = true;
     btn.setAttribute('aria-busy', 'true');
   }
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      dealWrap?.classList.add('land-poker-deal--play-deal');
-    });
-  });
 
   const afterFlipReveal = () => {
     applyRevealFields(host, revealFields);
@@ -103,6 +198,16 @@ function queueDrawReveal(host, revealFields) {
     startFlip();
   };
 
+  if (skipDeal) {
+    window.setTimeout(() => startFlip(), 40);
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      dealWrap?.classList.add('land-poker-deal--play-deal');
+    });
+  });
   dealWrap?.addEventListener('animationend', onDealEnd, { once: true });
   window.setTimeout(() => {
     if (inner?.classList.contains('land-poker-inner--from-back')) {
@@ -112,11 +217,42 @@ function queueDrawReveal(host, revealFields) {
 }
 
 /**
+ * 首次打开：先播放发牌，再静止等待，直至 CSV 加载完成。
  * @param {HTMLElement} host
- * @param {{ showNewUnlock?: boolean; animate?: boolean }} [opts]
+ * @param {HTMLButtonElement | null} btn
+ */
+function startInitialLoadingAnimation(host, btn) {
+  const dealWrap = host.querySelector('.land-poker-deal');
+  if (btn) {
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
+  }
+  if (!dealWrap) return;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      dealWrap.classList.add('land-poker-deal--play-deal');
+    });
+  });
+
+  const finishDeal = (e) => {
+    if (e && 'animationName' in e && e.animationName && e.animationName !== 'land-poker-deal-in') return;
+    dealWrap.classList.remove('land-poker-deal--play-deal');
+  };
+  dealWrap.addEventListener('animationend', finishDeal, { once: true });
+  window.setTimeout(() => {
+    if (dealWrap.classList.contains('land-poker-deal--play-deal')) {
+      finishDeal({ animationName: 'land-poker-deal-in' });
+    }
+  }, 650);
+}
+
+/**
+ * @param {HTMLElement} host
+ * @param {{ showNewUnlock?: boolean; animate?: boolean; skipDeal?: boolean }} [opts]
  */
 function renderDrawCard(row, host, opts = {}) {
-  const { showNewUnlock = false, animate = false } = opts;
+  const { showNewUnlock = false, animate = false, skipDeal = false } = opts;
   const portrait = typePosters[row.persona_code]?.image || '';
   const roleCn = row.role === 'Boss' ? '领导' : '同事';
   const sym = suitSymbol(row.suit);
@@ -221,7 +357,7 @@ function renderDrawCard(row, host, opts = {}) {
     `;
   host.hidden = false;
   if (animate) {
-    queueDrawReveal(host, revealFields);
+    queueDrawReveal(host, revealFields, { skipDeal });
   }
 }
 
@@ -246,13 +382,23 @@ function refreshUnlockProgress(deckTotal) {
 }
 
 async function main() {
-  const res = await fetch('./docs/persona-poker-deck.csv');
-  const rows = parseCsv(await res.text());
   const btn = document.getElementById('drawCardBtn');
   const host = document.getElementById('drawCardResult');
   const privacyEl = document.getElementById('landPrivacyNote');
   const clearBtn = document.getElementById('landClearLocalBtn');
-  if (!rows.length || !btn || !host) return;
+  const motionOk = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!btn || !host) return;
+
+  if (!host.querySelector('.draw-result-inner')) {
+    renderDrawSkeleton(host);
+  }
+  if (motionOk) {
+    startInitialLoadingAnimation(host, btn);
+  }
+
+  const res = await fetch('./docs/persona-poker-deck.csv');
+  const rows = parseCsv(await res.text());
+  if (!rows.length) return;
 
   const deckTotal = rows.length;
 
@@ -273,14 +419,13 @@ async function main() {
   // 每次进入页面随机展示；抽卡按钮仍会写入上次结果（供扩展或其它入口读取）
   const rowToShow = rows[Math.floor(Math.random() * rows.length)];
   const firstUnlock = recordUnlock(rowToShow.card_id);
-  renderDrawCard(rowToShow, host, { showNewUnlock: firstUnlock.isNew, animate: false });
+  renderDrawCard(rowToShow, host, { showNewUnlock: firstUnlock.isNew, animate: motionOk, skipDeal: motionOk });
   refreshUnlockProgress(deckTotal);
 
   btn.addEventListener('click', () => {
     const row = rows[Math.floor(Math.random() * rows.length)];
     localStorage.setItem(SBKPI_LAST_DRAW_KEY, row.card_id);
     const { isNew } = recordUnlock(row.card_id);
-    const motionOk = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     renderDrawCard(row, host, { showNewUnlock: isNew, animate: motionOk });
     refreshUnlockProgress(deckTotal);
   });

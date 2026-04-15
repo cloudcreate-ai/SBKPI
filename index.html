@@ -257,6 +257,14 @@
       color: rgba(255, 255, 255, 0.88);
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
     }
+    .land-poker-back--blank {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+    .land-poker-back--blank::before {
+      display: none;
+    }
     .land-poker-front {
       position: absolute;
       inset: 0;
@@ -569,7 +577,8 @@
           <div class="land-poker-slot">
             <div class="land-poker-deal">
               <div class="land-poker is-black">
-                <div class="land-poker-inner land-poker-inner--show-front">
+                <div class="land-poker-inner land-poker-inner--from-back">
+                  <div class="land-poker-back land-poker-back--blank" aria-hidden="true"></div>
                   <div class="land-poker-front">
                     <div class="lp-corner top">
                       <span class="lp-rank">?</span>
