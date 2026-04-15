@@ -6,27 +6,11 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import archiver from 'archiver';
+import { DEPLOY_ENTRIES } from './deploy-entries.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const releaseDir = path.join(root, 'release');
-
-/**
- * 仅包含站点运行时引用的路径（新增页面、数据或资源时请同步更新）。
- */
-const DEPLOY_ENTRIES = [
-  '_redirects',
-  'index.html',
-  'sbti.html',
-  'wiki.html',
-  'sbkpi.html',
-  'privacy.html',
-  'terms.html',
-  'js',
-  'image/poster',
-  'image/favicon.png',
-  'docs/persona-poker-deck.csv',
-];
 
 const now = new Date();
 const pad = (n) => String(n).padStart(2, '0');
