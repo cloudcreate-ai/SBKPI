@@ -1,0 +1,4 @@
+# Cloudflare Pages：无 .html 后缀访问静态页（200 为内部重写）
+/sbti /sbti.html 200
+/wiki /wiki.html 200
+/sbpki /sbpki.html 200

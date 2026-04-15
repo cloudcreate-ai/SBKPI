@@ -15,12 +15,15 @@ const releaseDir = path.join(root, 'release');
  * 仅包含站点运行时引用的路径（新增页面、数据或资源时请同步更新）。
  */
 const DEPLOY_ENTRIES = [
+  '_redirects',
   'index.html',
   'sbti.html',
   'wiki.html',
   'sbpki.html',
+  'poker.html',
   'js',
   'image/poster',
+  'image/favicon.png',
   'docs/persona-poker-deck.csv',
 ];
 

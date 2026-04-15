@@ -564,7 +564,7 @@ function goSiteHome() {
   } else {
     persistProgressFromApp();
   }
-  window.location.href = './index.html';
+  window.location.href = '/';
 }
 els.toTopBtn.addEventListener('click', goSiteHome);
 

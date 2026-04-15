@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="canonical" href="https://thedecklab.com/" />
+  <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
   <title>挑选你的SBKPI搭子 · SBKPI</title>
   <style>
     :root {
@@ -45,12 +47,25 @@
       margin-bottom: 14px;
     }
     .land-draw-hero-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 12px;
       font-size: clamp(1.35rem, 5.5vw, 1.95rem);
       margin: 0 0 12px;
       letter-spacing: -0.02em;
       color: var(--accent-strong);
       font-weight: 700;
       line-height: 1.25;
+      text-align: center;
+    }
+    .land-title-logo {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      flex-shrink: 0;
+      display: block;
     }
     .land-section-title {
       margin: 0 0 12px;
@@ -352,12 +367,6 @@
       font-size: 0.95rem;
     }
     .land-nav-btn:hover { background: #fafcfb; border-color: #c5d8c9; }
-    .land-nav-btn.primary {
-      background: var(--accent-strong);
-      color: #fff;
-      border-color: transparent;
-    }
-    .land-nav-btn.primary:hover { filter: brightness(1.05); }
     .land-nav-unlock {
       font-weight: 600;
       font-size: 0.82em;
@@ -392,12 +401,52 @@
       text-decoration: none;
     }
     .land-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    /* 页尾：本机数据说明与清除（对齐 sbti 测验页风格） */
+    .land-data-bar {
+      margin-top: 8px;
+      padding: 16px 4px 0;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .land-clear-local-btn {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(180, 55, 50, 0.38);
+      background: #fff;
+      color: #9e2a2a;
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: none;
+      touch-action: manipulation;
+    }
+    .land-clear-local-btn:hover {
+      background: #fff8f7;
+      border-color: rgba(180, 55, 50, 0.5);
+    }
+    .land-clear-local-btn:active {
+      opacity: 0.92;
+    }
+    .land-privacy-note {
+      margin: 10px 0 0;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: var(--muted);
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div class="shell">
     <section class="card" aria-labelledby="draw-title">
-      <h1 id="draw-title" class="land-draw-hero-title">挑选你的SBKPI搭子</h1>
+      <h1 id="draw-title" class="land-draw-hero-title">
+        <img src="/image/favicon.png" alt="" class="land-title-logo" width="64" height="64" decoding="async" />
+        <span>挑选你的SBKPI搭子</span>
+      </h1>
       <p class="land-hint">从 SBKPI 牌堆随机抽一张，看看你的 SBKPI搭子，不喜欢可以换。</p>
       <button type="button" id="drawCardBtn" class="btn-draw">
         <span class="btn-draw-main">换一个 SBKPI 搭子</span>
@@ -409,9 +458,9 @@
     <nav class="card" aria-label="主要入口">
       <h2 class="land-section-title">入口</h2>
       <div class="land-nav-grid">
-        <a class="land-nav-btn primary" href="./sbti.html">SBTI 人格测验</a>
-        <a class="land-nav-btn" href="./wiki.html">SBTI 人格图鉴</a>
-        <a class="land-nav-btn" href="./sbpki.html" id="navSbpkiGallery">SBKPI搭子图鉴<span id="navGalleryUnlock" class="land-nav-unlock" aria-hidden="true"></span></a>
+        <a class="land-nav-btn" href="/sbti">SBTI 人格测验</a>
+        <a class="land-nav-btn" href="/wiki">SBTI 人格图鉴</a>
+        <a class="land-nav-btn" href="/sbpki" id="navSbpkiGallery">SBKPI搭子图鉴<span id="navGalleryUnlock" class="land-nav-unlock" aria-hidden="true"></span></a>
       </div>
     </nav>
 
@@ -433,8 +482,12 @@
       <p>原作者未声明开源协议，本仓库亦未附 License；二次使用请自行把握尺度，勿打扰原作者。</p>
     </section>
 
+    <div class="land-data-bar">
+      <button type="button" id="landClearLocalBtn" class="land-clear-local-btn"></button>
+      <p class="land-privacy-note" id="landPrivacyNote"></p>
+    </div>
     <footer class="land-footer">
-      <a id="landSiteLink" href="https://sbpki.cloudcreate.ai">sbpki.cloudcreate.ai</a>
+      <a id="landSiteLink" href="https://thedecklab.com">thedecklab.com</a>
       <span aria-hidden="true"> · </span>
       <a id="landGhLink" href="https://github.com/cloudcreate-ai/SBKPI">GitHub</a>
     </footer>

@@ -2,6 +2,14 @@
  * SBKPI搭子图鉴：与首页抽卡共用的解锁状态（localStorage）
  */
 export const SBKPI_UNLOCK_KEY = 'sbkpi_unlocked_cards';
+/** 首页抽卡上次记录（与解锁独立，一并清除） */
+export const SBKPI_LAST_DRAW_KEY = 'sbkpi_last_draw_card_id';
+
+/** 清除首页搭子解锁与抽卡相关 localStorage（不影响 SBTI 测验数据） */
+export function clearSbkpiHomeLocalData() {
+  localStorage.removeItem(SBKPI_UNLOCK_KEY);
+  localStorage.removeItem(SBKPI_LAST_DRAW_KEY);
+}
 
 /** @returns {Set<string>} 已解锁的 card_id */
 export function getUnlockedCardIds() {

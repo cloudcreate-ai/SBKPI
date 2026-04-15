@@ -2,11 +2,14 @@
  * SBKPI 站点首页：SBKPI搭子抽卡
  */
 import zh from './sbti-data.zh.js';
-import { getUnlockedCardIds, recordUnlock } from './sbti-unlock.js';
+import {
+  SBKPI_LAST_DRAW_KEY,
+  clearSbkpiHomeLocalData,
+  getUnlockedCardIds,
+  recordUnlock,
+} from './sbti-unlock.js';
 
-const { typePosters, typeLibrary } = zh;
-
-const LAST_DRAW_KEY = 'sbkpi_last_draw_card_id';
+const { typePosters, typeLibrary, ui } = zh;
 
 /** @param {string} s */
 function escHtml(s) {
@@ -148,9 +151,25 @@ async function main() {
   const rows = parseCsv(await res.text());
   const btn = document.getElementById('drawCardBtn');
   const host = document.getElementById('drawCardResult');
+  const privacyEl = document.getElementById('landPrivacyNote');
+  const clearBtn = document.getElementById('landClearLocalBtn');
   if (!rows.length || !btn || !host) return;
 
   const deckTotal = rows.length;
+
+  if (privacyEl) privacyEl.textContent = ui.land.dataPrivacy;
+  if (clearBtn) {
+    clearBtn.textContent = ui.land.clearLocal;
+    clearBtn.addEventListener('click', () => {
+      if (!window.confirm(ui.land.clearLocalConfirm)) return;
+      clearSbkpiHomeLocalData();
+      refreshUnlockProgress(deckTotal);
+      const row = rows[Math.floor(Math.random() * rows.length)];
+      const { isNew } = recordUnlock(row.card_id);
+      renderDrawCard(row, host, { showNewUnlock: isNew });
+      refreshUnlockProgress(deckTotal);
+    });
+  }
 
   // 每次进入页面随机展示；抽卡按钮仍会写入上次结果（供扩展或其它入口读取）
   const rowToShow = rows[Math.floor(Math.random() * rows.length)];
@@ -160,7 +179,7 @@ async function main() {
 
   btn.addEventListener('click', () => {
     const row = rows[Math.floor(Math.random() * rows.length)];
-    localStorage.setItem(LAST_DRAW_KEY, row.card_id);
+    localStorage.setItem(SBKPI_LAST_DRAW_KEY, row.card_id);
     const { isNew } = recordUnlock(row.card_id);
     renderDrawCard(row, host, { showNewUnlock: isNew });
     refreshUnlockProgress(deckTotal);

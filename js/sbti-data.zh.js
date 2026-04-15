@@ -40,12 +40,20 @@ export const ui = {
     authorOriginalLinkText: 'B站原版',
     authorOriginalLinkTitle: '在 bilibili 打开原作者活动页',
     /** 首页页脚 */
-    sitePublicUrl: 'https://sbpki.cloudcreate.ai',
-    sitePublicLabel: 'sbpki.cloudcreate.ai',
+    sitePublicUrl: 'https://thedecklab.com',
+    sitePublicLabel: 'thedecklab.com',
     sitePublicTitle: '本站访问地址',
     repoUrl: 'https://github.com/cloudcreate-ai/SBKPI',
     repoLabel: 'GitHub',
     repoTitle: 'SBKPI 源码仓库',
+  },
+  /** SBKPI 首页 index.html 页尾 */
+  land: {
+    dataPrivacy:
+      '抽卡结果与搭子图鉴解锁记录仅保存在本机浏览器，不会上传到任何服务器。',
+    clearLocal: '清除本机搭子数据',
+    clearLocalConfirm:
+      '将删除本机保存的搭子解锁进度与抽卡记录，且无法恢复；不影响人格测验数据。确定清除？',
   },
   wizard: {
     backHome: '测验入口',

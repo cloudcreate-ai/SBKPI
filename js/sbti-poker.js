@@ -209,7 +209,7 @@ function createCardEl(card, unlockedIds) {
         <div class="back-title">${card.persona_name} · ${roleCn}</div>
         <p class="back-flavor">${card.flavor}</p>
         <p class="back-skill">${card.skill}</p>
-        <a class="card-gallery-link" href="./wiki.html#${galleryHash}">在 SBTI 人格图鉴中查看</a>
+        <a class="card-gallery-link" href="/wiki#${galleryHash}">在 SBTI 人格图鉴中查看</a>
       </div>
     </div>
   `;
@@ -236,7 +236,7 @@ function createCardEl(card, unlockedIds) {
         </div>
         <div class="card-name card-name--locked">未解锁</div>
         <div class="card-code card-code--locked">???</div>
-        <a class="card-unlock-cta" href="./index.html">去首页抽卡解锁</a>
+        <a class="card-unlock-cta" href="/">去首页抽卡解锁</a>
         <div class="card-corner bottom">
           <span class="rank">${rank}</span>
           <span class="suit">${symbol}</span>

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="canonical" href="https://thedecklab.com/wiki" />
+  <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
   <title>SBTI 人格图鉴</title>
   <style>
     :root {
@@ -43,10 +45,20 @@
       margin-bottom: 16px;
     }
     .page-head h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
       font-size: clamp(1.35rem, 4.5vw, 1.75rem);
       margin: 0;
       letter-spacing: -0.02em;
       line-height: 1.25;
+    }
+    .page-title-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
     .page-head p {
       margin: 6px 0 0;
@@ -301,12 +313,15 @@
   <div class="shell">
     <header class="page-head">
       <div>
-        <h1>SBTI 人格图鉴</h1>
+        <h1>
+          <img src="/image/favicon.png" alt="" class="page-title-logo" width="64" height="64" decoding="async" />
+          <span>SBTI 人格图鉴</span>
+        </h1>
         <p>点击卡片查看简介与完整解读；可通过链接加 <code>#类型代码</code> 分享。</p>
       </div>
       <div class="page-actions">
-        <a class="back-link" href="./sbpki.html">SBKPI搭子图鉴</a>
-        <a class="back-link" href="./sbti.html">← 返回测验</a>
+        <a class="back-link" href="/sbpki">SBKPI搭子图鉴</a>
+        <a class="back-link" href="/sbti">← 返回测验</a>
       </div>
     </header>
 

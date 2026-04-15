@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="canonical" href="https://thedecklab.com/sbti" />
+  <link rel="icon" href="/image/favicon.png" type="image/png" sizes="64x64" />
   <title>SBTI 人格测验</title>
   <style>
     :root {
@@ -608,23 +610,45 @@
     @media (min-width: 480px) {
       .shell { padding-left: 20px; padding-right: 20px; }
     }
+    .intro-main-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 0 12px;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--accent-strong);
+      line-height: 1.2;
+    }
+    .intro-title-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex-shrink: 0;
+      display: block;
+    }
   </style>
 </head>
 <body>
   <div class="shell">
     <section id="intro" class="screen active">
       <div class="hero card">
-        <p class="sbti-nav-back"><a class="intro-gallery-link" href="./index.html">← SBKPI 首页</a></p>
-        <h1 id="introTitle">SBTI</h1>
+        <p class="sbti-nav-back"><a class="intro-gallery-link" href="/">← SBKPI 首页</a></p>
+        <h1 class="intro-main-title">
+          <img src="/image/favicon.png" alt="" class="intro-title-logo" width="64" height="64" decoding="async" />
+          <span id="introTitle">SBTI</span>
+        </h1>
         <div class="intro-actions-row" id="introActionsRow">
           <button type="button" id="continueResumeBtn" class="btn-primary" hidden>继续测试</button>
           <button type="button" id="startBtn" class="btn-secondary">开始测试</button>
         </div>
         <p class="intro-gallery-row">
-          <a class="intro-gallery-link" href="./wiki.html">SBTI 人格图鉴 · 浏览全部类型</a>
+          <a class="intro-gallery-link" href="/wiki">SBTI 人格图鉴 · 浏览全部类型</a>
         </p>
         <p class="intro-gallery-row">
-          <a class="intro-gallery-link" href="./sbpki.html">SBKPI搭子图鉴 · 卡面展示</a>
+          <a class="intro-gallery-link" href="/sbpki">SBKPI搭子图鉴 · 卡面展示</a>
         </p>
         <details class="intro-history" id="introHistory" hidden>
           <summary id="introHistorySummary">历次结果</summary>

@@ -132,7 +132,7 @@ function openDetail(code, opts = {}) {
   dialogIntroEl.textContent = lib.intro;
   dialogDescEl.textContent = lib.desc;
   if (dialogPokerLinkEl) {
-    dialogPokerLinkEl.href = `./sbpki.html#${encodeURIComponent(code)}`;
+    dialogPokerLinkEl.href = `/sbpki#${encodeURIComponent(code)}`;
   }
   dialogEl.dataset.code = code;
   if (typeof dialogEl.showModal === 'function') {
