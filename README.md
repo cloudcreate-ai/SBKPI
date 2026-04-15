@@ -1,6 +1,6 @@
 # SBKPI
 
-基于上游仓库 **[SBTI-test](https://github.com/UnluckyNinja/SBTI-test)** 的思路与结构做的**变种站点**：`**index.html`** 为 SBKPI 首页（随机抽卡、设计说明与声明），`**sbti.html**` 为 **SBTI 人格测验**，另有 **SBTI 人格图鉴**（`wiki.html`）与 **SBKPI 扑克图鉴**（`sbkpi.html`）。内容以**调侃、玩梗、搞笑**为主，**请勿当真**，更不适合当作心理测评、职场评价或任何严肃决策依据。
+基于上游仓库 **[SBTI-test](https://github.com/UnluckyNinja/SBTI-test)** 的思路与结构做的**变种站点**：`**index.html`** 为 SBKPI 首页（随机抽卡、设计说明与声明），`**sbti.html`** 为 **SBTI 人格测验**，另有 **SBTI 人格图鉴**（`wiki.html`）与 **SBKPI 扑克图鉴**（`sbkpi.html`）。内容以**调侃、玩梗、搞笑**为主，**请勿当真**，更不适合当作心理测评、职场评价或任何严肃决策依据。
 
 ## 仓库
 
