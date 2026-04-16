@@ -64,6 +64,7 @@ npm run deploy
 记录与站点相关的**动机、脑洞与实现复盘**；长文以站外文章链接为主，仓库内仅作索引。
 
 1. **第一篇**：[好奇 AI Agent 会是什么 SBTI 人格，我 vibe 了一个给 AI 用的 SBTI 测试](https://xmanyou.com/sbti-test-for-ai/)
+2. **第二篇**：[给 AI 的 SBTI 测试：如何知道你的小龙虾是什么人格？](https://xmanyou.com/ai-sbti-test-for-openclaw/)
 
 ## 待定：卡牌游戏向扩展
 
