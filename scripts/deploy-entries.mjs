@@ -12,6 +12,7 @@ export const DEPLOY_ENTRIES = [
   'wiki.html',
   'sbkpi.html',
   'privacy.html',
+  'devlog.html',
   'terms.html',
   'js',
   'aiti/q',

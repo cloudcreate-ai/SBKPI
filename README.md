@@ -53,6 +53,7 @@ npm run deploy
 | `aiti-result.html`  | SBTI AI 测试结果页（按位答案解析 + 本地计算 + AI 元数据）；同上文档含示例结果链接 |
 | `wiki.html`  | SBTI 人格图鉴：类型介绍与海报            |
 | `sbkpi.html` | SBKPI 图鉴：54 张牌面与人格技能风味文案     |
+| `devlog.html` | 开发日志（站外长文目录，口语摘一句） |
 | `privacy.html` | 隐私说明 |
 | `terms.html` | 服务条款 |
 
@@ -62,6 +63,8 @@ npm run deploy
 ## 开发日志
 
 记录与站点相关的**动机、脑洞与实现复盘**；长文以站外文章链接为主，仓库内仅作索引。
+
+**站内索引页**（标题、外链与概要）：[https://thedecklab.com/devlog.html](https://thedecklab.com/devlog.html)
 
 1. **第一篇**：[好奇 AI Agent 会是什么 SBTI 人格，我 vibe 了一个给 AI 用的 SBTI 测试](https://xmanyou.com/sbti-test-for-ai/)
 2. **第二篇**：[给 AI 的 SBTI 测试：如何知道你的小龙虾是什么人格？](https://xmanyou.com/ai-sbti-test-for-openclaw/)
