@@ -37,6 +37,7 @@ npm run deploy
 
 - `npm run build` 会生成 `dist/`（用于 Worker Assets）。
 - `npm run deploy` 会先构建再执行 `wrangler deploy`。
+- Worker 入口为 `worker/aiti-worker.mjs`，与 `dist` 同部署；**`GET /api/aiti-result?q=&a=`** 返回纯文本计分结果（参数与 `aiti-result` 页面一致），说明见 [docs/aiti-sbti-testing.md](docs/aiti-sbti-testing.md)。
 - 仍可使用 `npm run release:zip` 生成发布包到 `release/`。
 - 部署清单统一维护在 `scripts/deploy-entries.mjs`（zip 与 dist 复用）。
 - `ads.txt` 默认在本地维护并被 git 忽略，但会在构建/部署时纳入产物。
