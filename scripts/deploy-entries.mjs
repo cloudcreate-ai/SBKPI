@@ -7,6 +7,7 @@ export const DEPLOY_ENTRIES = [
   'index.html',
   'sbti.html',
   'aiti.html',
+  'aiti-wizard.html',
   'aiti-result.html',
   'wiki.html',
   'sbkpi.html',

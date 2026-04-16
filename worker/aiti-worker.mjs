@@ -118,6 +118,7 @@ function formatSuccessText({
   m,
   result,
   bundle,
+  origin,
 }) {
   const ft = result.finalType;
   const lines = [];
@@ -163,6 +164,18 @@ function formatSuccessText({
   lines.push('');
   lines.push('[note]');
   lines.push('娱乐向站点内容，非临床或职场测评；结果仅供玩梗参考。');
+  const verifyUrl = new URL('/aiti-result', origin);
+  verifyUrl.searchParams.set('q', setId);
+  verifyUrl.searchParams.set('a', answerRaw);
+  verifyUrl.searchParams.set('n', n);
+  verifyUrl.searchParams.set('m', m);
+  // 人工校验：提示语 + 裸 URL 独占一行（前后空行），便于终端/聊天里点击打开或整块复制
+  lines.push('');
+  lines.push('[human_verify]');
+  lines.push('点击或者复制下方链接到浏览器，查看详细报告');
+  lines.push('');
+  lines.push(verifyUrl.toString());
+  lines.push('');
   return `${lines.join('\n')}\n`;
 }
 
@@ -202,6 +215,7 @@ async function handleAitiApi(request, env) {
       m,
       result,
       bundle: sbtiBundle,
+      origin,
     });
     return textResponse(200, body);
   } catch (err) {

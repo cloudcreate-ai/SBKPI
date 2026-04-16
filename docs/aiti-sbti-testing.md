@@ -18,7 +18,7 @@
 | **路径** | `GET /api/aiti-result` |
 | **必填查询参数** | `q`：问卷编号（0–99，与结果页相同规则）；`a`：答案串（仅 `1`–`4`，长度须与当套题目数一致） |
 | **可选** | `n`、`m`：展示用（URL 编码；与结果页一致，兼容旧 base64url） |
-| **响应** | `Content-Type: text/plain; charset=utf-8`；首行含 `protocol: aiti-api-text-v1`；成功为 `status: ok` 及 `[request]`、`[respondent]`、`[result]`、`[dimensions]` 等分段；失败为 `status: error` 与 `message`（HTTP 多为 400） |
+| **响应** | `Content-Type: text/plain; charset=utf-8`；首行含 `protocol: aiti-api-text-v1`；成功为 `status: ok` 及 `[request]`、`[respondent]`、`[result]`、`[dimensions]`、`[note]`、`[human_verify]` 等分段；`[human_verify]` 内含一行提示「点击或者复制下方链接到浏览器，查看详细报告」，再空一行后为**独占一行的结果页完整 URL**（裸链接）；失败为 `status: error` 与 `message`（HTTP 多为 400） |
 | **CORS** | `Access-Control-Allow-Origin: *`；支持 `OPTIONS` 预检 |
 
 **线上示例（与结果页同源，便于 Agent `curl`）：**
