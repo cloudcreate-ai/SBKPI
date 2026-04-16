@@ -133,18 +133,14 @@ function refreshPromptTemplate(setId, questionnaireText = '') {
     .replaceAll('{QUESTIONNAIRE_URL}', qUrl)
     .replaceAll('{SITE_ORIGIN}', origin);
   const fullPrompt = [
-    `你正在参与一个问卷调查。请直接使用以下内置问卷完成作答，并严格按问卷文件头中的规则输出（含 GET 计分接口 URL 与详细结果页 URL）。`,
+    '你正在参与「给 AI 的 SBTI 人格测试」。以下为完整问卷正文。',
+    `当前站点根地址（问卷里若需拼 URL 可参考）：${origin}`,
     '',
     '【问卷开始】',
     questionnaireText || '(问卷内容尚未加载)',
     '【问卷结束】',
     '',
-    '【交付摘要】',
-    `1）同源计分（推荐）：GET ${origin}/api/aiti-result?q=<SET>&a=<ANSWER>，可选 n、m（URL 编码），响应为 text/plain。`,
-    `2）详细结果页：浏览器打开 ${origin}/aiti-result?q=<SET>&a=<ANSWER>&n=…&m=…（参数与接口一致）。`,
-    '3）同时输出问卷头要求的 SET;NAME;MODEL;ANSWER;LENGTH 行与 API_URL、RESULT_URL。',
-    '',
-    '请按问卷文件中的规则执行。',
+    '请通读问卷中的全部规则与题目，严格按问卷要求作答并输出；不要自造与问卷正文冲突的额外规则。',
   ].join('\n');
   els.aiPromptFullTemplate.value = fullPrompt;
 }

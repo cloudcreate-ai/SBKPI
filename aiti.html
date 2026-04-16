@@ -251,23 +251,17 @@
 
     <section class="card">
       <h2 class="section-title">3) 给 AI 的指令模板</h2>
-      <p class="hint">可选两种模式：简短版（仅链接，信息暴露更少）或详细版（内置完整问卷，执行更稳定）。</p>
+      <p class="hint">可选两种模式：简短版（只给问卷链接，细则全靠问卷正文）或详细版（内置完整问卷，执行更稳定）。</p>
       <div class="prompt-mode-row">
         <button id="promptModeShortBtn" type="button" class="prompt-mode-btn active">简短版（链接）</button>
         <button id="promptModeFullBtn" type="button" class="prompt-mode-btn">详细版（内置问卷）</button>
       </div>
-      <textarea id="aiPromptShortTemplate" spellcheck="false" readonly style="min-height:200px;">你正在参与「给 AI 的 SBTI 人格测试」。
+      <textarea id="aiPromptShortTemplate" spellcheck="false" readonly style="min-height:120px;">你正在参与「给 AI 的 SBTI 人格测试」。
 
-请从以下链接拉取问卷正文，并按文件内规则逐题必答，得到与题目数量相同、每位仅为 1–4 的答案串：
+请打开问卷链接，通读其中的全部规则与题目，**严格按问卷要求**完成作答与后续输出（含答案串、是否调用接口、链接格式等）：
 {QUESTIONNAIRE_URL}
 
-作答完成后请完成三件事（在回复中分段写出）：
-1）标准串（便于复制到网页）：SET=&lt;问卷两位编号&gt;;NAME=&lt;称呼可空&gt;;MODEL=&lt;模型可空&gt;;ANSWER=&lt;答案串&gt;;LENGTH=&lt;长度&gt;
-2）计分：用 GET 请求同源接口（纯文本，便于 Agent 解析；将 SET、ANSWER 换成你的实际值；n、m 可选且须 URL 编码）：
-   {SITE_ORIGIN}/api/aiti-result?q=&lt;SET&gt;&amp;a=&lt;ANSWER&gt;
-3）详细结果页：给出可在浏览器打开的完整 URL（海报与十五维度等），参数与上一步一致：
-   {SITE_ORIGIN}/aiti-result?q=&lt;SET&gt;&amp;a=&lt;ANSWER&gt;&amp;n=…&amp;m=…
-   不需要展示称呼/模型时可省略 n、m（页面会显示默认「匿名未知」）。</textarea>
+当前站点根地址（问卷里若需拼 URL 可参考）：{SITE_ORIGIN}</textarea>
       <textarea id="aiPromptFullTemplate" spellcheck="false" readonly style="min-height:260px;display:none;"></textarea>
       <div class="form-row form-row-tight">
         <button id="copyPromptBtn" type="button" class="btn-secondary">复制指令模板</button>
@@ -276,7 +270,7 @@
 
     <section class="card">
       <h2 class="section-title">4) 填答案串并生成结果 URL</h2>
-      <p class="hint">下方文本框含两行链接：<strong>详细结果页</strong>（浏览器）与 <strong>计分 API</strong>（GET，纯文本）；给 AI 的问卷头规则亦要求先调 API 再附结果页 URL。</p>
+      <p class="hint">下方文本框含两行链接：<strong>详细结果页</strong>（浏览器）与 <strong>计分 API</strong>（GET，纯文本）。</p>
       <p class="hint">答案串只允许 `1-4`，第 N 位对应问卷第 N 题。</p>
       <p class="hint">也可直接粘贴标准串：`NAME=...;MODEL=...;ANSWER=...;LENGTH=...`，点击“解析标准串”。</p>
       <textarea id="resultBundleInput" spellcheck="false" style="min-height:90px;" placeholder="SET=19;NAME=GitHub Copilot;MODEL=Claude Sonnet 4.6;ANSWER=233...;LENGTH=32"></textarea>
