@@ -53,6 +53,13 @@
       font-weight: 600;
     }
     .top-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .top-link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin: 0 0 12px;
+    }
+    .top-link-row .top-link { margin-bottom: 0; }
     .result-wrap { padding: 18px 16px 24px; }
     .result-top {
       display: flex;
@@ -342,7 +349,10 @@
 <body>
   <div class="shell">
     <section class="card result-wrap">
-      <a class="top-link" href="/aiti.html">← 返回 SBTI AI 测试</a>
+      <p class="top-link-row">
+        <a class="top-link" href="/aiti.html">← AITI 简易</a>
+        <a class="top-link" href="/aiti-wizard.html">完整向导</a>
+      </p>
       <div class="result-top">
         <div class="poster-box">
           <div class="poster-type-banner">
@@ -393,7 +403,9 @@
         <span class="site-footer-sep" aria-hidden="true">·</span>
         <a href="/sbti">SBTI 测验</a>
         <span class="site-footer-sep" aria-hidden="true">·</span>
-        <a href="/aiti.html">SBTI AI 测试</a>
+        <a href="/aiti.html">AITI 简易</a>
+        <span class="site-footer-sep" aria-hidden="true">·</span>
+        <a href="/aiti-wizard.html">完整向导</a>
         <span class="site-footer-sep" aria-hidden="true">·</span>
         <a href="/wiki">人格图鉴</a>
         <span class="site-footer-sep" aria-hidden="true">·</span>

@@ -1,7 +1,10 @@
 {
   "name": "sbpki",
+  "main": "worker/aiti-worker.mjs",
   "compatibility_date": "2026-04-15",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
   }
 }

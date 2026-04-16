@@ -14,13 +14,22 @@ CHECK_RULE|输出前至少自检一次：第N题选项值 == 答案串第N位
 BASE_URL_RULE|优先从“当前问卷文件的来源URL”提取 baseUrl(协议+域名+端口)；若无法提取则使用 FALLBACK_BASE_URL
 FALLBACK_BASE_URL|https://thedecklab.com
 RESULT_PATH|/aiti-result?q=62&a=<答案串>
-PROFILE_URL_PARAM|将称呼与模型分别以参数 n/m 拼接到结果链接；优先使用 URLSearchParams 自动编码，或对参数值做 URL 编码
+API_PATH|/api/aiti-result?q=62&a=<答案串>
+PROFILE_URL_PARAM|将称呼与模型分别以参数 n/m 拼接到结果链接与计分 API；优先使用 URLSearchParams 自动编码，或对参数值做 URL 编码
+API_SCORE_RULE|作答完成后必须用 GET 请求 baseUrl + API_PATH（将<答案串>替换为实际答案串，并视需要追加 &n= &m=）；响应为 text/plain，即权威计分结果
+PERSONA_VIA_API|人格计分结论（最终类型代码/中文名、徽章、副文案、十五维度等）仅以该次 GET 的 text/plain 响应正文为准；禁止在未依据该正文的情况下自行编造 final_code 或与之一致的结论文案
+PERSONA_VIA_API_OUTPUT|最终对用户可见的回复中，须原样包含（完整复制）该次 GET 的 HTTP 响应体，再可做简短复述；复述不得与正文矛盾
+PERSONA_VIA_API_FALLBACK|若运行环境完全无法发起 HTTP GET，须明确声明「无法调用接口」，仅输出 API_URL 与答案串，且不得写出具体人格代码或维度分数
+RESULT_PAGE_RULE|在 API_URL 之后输出人类可读结果页完整 URL：baseUrl + RESULT_PATH（同上替换答案串并带 n、m），供浏览器打开查看海报与十五维度
 OUTPUT_STEP_1|先按固定纯文本输出，便于人工查看与复制到网页
 OUTPUT_STEP_1_FORMAT|SET=<问卷编号>;NAME=<称呼，可空>;MODEL=<模型，可空>;ANSWER=<答案串>;LENGTH=<长度>
-OUTPUT_STEP_2|再输出 RESULT_URL=<完整结果链接>，便于一键打开
-OUTPUT_NOTE|若无法可靠编码 n/m，可先保证 OUTPUT_STEP_1 正确，再尝试输出 RESULT_URL
+OUTPUT_STEP_2|再输出 API_URL=<完整 GET 计分接口链接>（与 RESULT_URL 使用相同的 q、a、n、m 参数，仅路径为 /api/aiti-result）；并须已按 PERSONA_VIA_API 要求用该 URL 取得 text/plain 后再写结论
+OUTPUT_STEP_3|再输出 RESULT_URL=<完整结果页链接>，便于浏览器打开并进行人工校验
+OUTPUT_NOTE|若无法可靠编码 n/m，可先保证 OUTPUT_STEP_1 与 API_URL 的 q、a 正确，再尽量输出 RESULT_URL
 RESULT_URL_EXAMPLE|https://thedecklab.com/aiti-result?q=62&a=<答案串>
-RESULT_URL_NOTE|最终结果链接 = baseUrl + RESULT_PATH；将<答案串>替换为你的作答结果，不要添加任何额外字符
+API_URL_EXAMPLE|https://thedecklab.com/api/aiti-result?q=62&a=<答案串>
+RESULT_URL_NOTE|结果页链接 = baseUrl + RESULT_PATH；将<答案串>替换为你的作答结果，不要添加任何额外字符
+API_URL_NOTE|计分接口链接 = baseUrl + API_PATH；参数名与结果页一致（q、a、n、m），不要省略必填的 q 与 a
 
 Q|01|Nz24fMBBFr|你的恋爱对象是一个尊老爱幼，温柔敦厚，洁身自好，光明磊落，大义凛然，能言善辩，口才流利，观察入微，见多识广，博学多才，诲人不倦，和蔼可亲，平易近人，心地善良，慈眉善目，积极进取，意气风发，玉树临风，国色天香，倾国倾城，花容月貌的人，此时你会？|1=就算ta再优秀我也不会陷入太深。;2=会介于A和C之间。;3=会非常珍惜ta，也许会变成恋爱脑。
 Q|02|DEcqbzdNts|我喜欢打破常规，不喜欢被束缚|1=认同;2=保持中立;3=不认同
