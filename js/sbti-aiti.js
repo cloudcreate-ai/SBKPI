@@ -87,6 +87,28 @@ function buildResultUrl(setId, answer) {
   return url.toString();
 }
 
+/** 同源 GET 计分接口（Worker 返回 text/plain） */
+function buildApiResultUrl(setId, answer) {
+  const url = new URL('/api/aiti-result', window.location.href);
+  url.searchParams.set('q', setId);
+  url.searchParams.set('a', answer);
+  const nameVal = (els.respondentNameInput.value || '').trim() || UNKNOWN_TEXT;
+  const modelVal = (els.respondentModelInput.value || '').trim() || UNKNOWN_TEXT;
+  url.searchParams.set('n', nameVal);
+  url.searchParams.set('m', modelVal);
+  return url.toString();
+}
+
+function buildResultUrlsText(setId, answer) {
+  return [
+    '详细结果页（浏览器）:',
+    buildResultUrl(setId, answer),
+    '',
+    '计分 API（GET，纯文本）:',
+    buildApiResultUrl(setId, answer),
+  ].join('\n');
+}
+
 function buildQuestionnaireUrl(setId) {
   return new URL(`./aiti/q/${setId}.txt`, window.location.href).toString();
 }
@@ -106,13 +128,21 @@ function setPromptMode(mode) {
 
 function refreshPromptTemplate(setId, questionnaireText = '') {
   const qUrl = buildQuestionnaireUrl(setId);
-  els.aiPromptShortTemplate.value = promptShortRaw.replace('{QUESTIONNAIRE_URL}', qUrl);
+  const origin = window.location.origin;
+  els.aiPromptShortTemplate.value = promptShortRaw
+    .replaceAll('{QUESTIONNAIRE_URL}', qUrl)
+    .replaceAll('{SITE_ORIGIN}', origin);
   const fullPrompt = [
-    `你正在参与一个问卷调查。请直接使用以下内置问卷完成作答与结果链接构造：`,
+    `你正在参与一个问卷调查。请直接使用以下内置问卷完成作答，并严格按问卷文件头中的规则输出（含 GET 计分接口 URL 与详细结果页 URL）。`,
     '',
     '【问卷开始】',
     questionnaireText || '(问卷内容尚未加载)',
     '【问卷结束】',
+    '',
+    '【交付摘要】',
+    `1）同源计分（推荐）：GET ${origin}/api/aiti-result?q=<SET>&a=<ANSWER>，可选 n、m（URL 编码），响应为 text/plain。`,
+    `2）详细结果页：浏览器打开 ${origin}/aiti-result?q=<SET>&a=<ANSWER>&n=…&m=…（参数与接口一致）。`,
+    '3）同时输出问卷头要求的 SET;NAME;MODEL;ANSWER;LENGTH 行与 API_URL、RESULT_URL。',
     '',
     '请按问卷文件中的规则执行。',
   ].join('\n');
@@ -136,8 +166,7 @@ async function handleLoadQuestionnaire() {
     if (!els.answerInput.value) {
       els.answerInput.value = ''.padEnd(qCount, '1');
     }
-    const previewUrl = buildResultUrl(setId, els.answerInput.value.trim());
-    els.resultUrl.value = previewUrl;
+    els.resultUrl.value = buildResultUrlsText(setId, els.answerInput.value.trim());
   } catch (err) {
     showError(err instanceof Error ? err.message : '问卷读取失败。');
   }
@@ -224,9 +253,8 @@ function handleOpenResult() {
     showError(err);
     return;
   }
-  const url = buildResultUrl(setId, answer);
-  els.resultUrl.value = url;
-  window.open(url, '_blank', 'noopener,noreferrer');
+  els.resultUrl.value = buildResultUrlsText(setId, answer);
+  window.open(buildResultUrl(setId, answer), '_blank', 'noopener,noreferrer');
 }
 
 function bind() {
@@ -286,7 +314,7 @@ function bind() {
     els.respondentNameInput.value = parsed.name;
     els.respondentModelInput.value = parsed.model;
     els.answerInput.value = parsed.answer;
-    els.resultUrl.value = buildResultUrl(setId, parsed.answer);
+    els.resultUrl.value = buildResultUrlsText(setId, parsed.answer);
   });
   els.setInput.addEventListener('change', () => {
     const setId = normalizeSetId(els.setInput.value);
@@ -296,12 +324,12 @@ function bind() {
   els.answerInput.addEventListener('input', () => {
     const setId = normalizeSetId(els.setInput.value);
     if (!setId) return;
-    els.resultUrl.value = buildResultUrl(setId, els.answerInput.value.trim());
+    els.resultUrl.value = buildResultUrlsText(setId, els.answerInput.value.trim());
   });
   const refreshUrlByProfile = () => {
     const setId = normalizeSetId(els.setInput.value);
     if (!setId) return;
-    els.resultUrl.value = buildResultUrl(setId, els.answerInput.value.trim());
+    els.resultUrl.value = buildResultUrlsText(setId, els.answerInput.value.trim());
   };
   els.respondentNameInput.addEventListener('input', refreshUrlByProfile);
   els.respondentModelInput.addEventListener('input', refreshUrlByProfile);

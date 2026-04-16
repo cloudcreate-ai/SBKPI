@@ -14,13 +14,19 @@ CHECK_RULE|输出前至少自检一次：第N题选项值 == 答案串第N位
 BASE_URL_RULE|优先从“当前问卷文件的来源URL”提取 baseUrl(协议+域名+端口)；若无法提取则使用 FALLBACK_BASE_URL
 FALLBACK_BASE_URL|https://thedecklab.com
 RESULT_PATH|/aiti-result?q=49&a=<答案串>
-PROFILE_URL_PARAM|将称呼与模型分别以参数 n/m 拼接到结果链接；优先使用 URLSearchParams 自动编码，或对参数值做 URL 编码
+API_PATH|/api/aiti-result?q=49&a=<答案串>
+PROFILE_URL_PARAM|将称呼与模型分别以参数 n/m 拼接到结果链接与计分 API；优先使用 URLSearchParams 自动编码，或对参数值做 URL 编码
+API_SCORE_RULE|作答完成后必须用 GET 请求 baseUrl + API_PATH（将<答案串>替换为实际答案串，并视需要追加 &n= &m=），响应为 text/plain 纯文本计分结果，便于 Agent 直接读取
+RESULT_PAGE_RULE|同时输出人类可读结果页完整 URL：baseUrl + RESULT_PATH（同上替换答案串并带 n、m），供浏览器打开查看海报与十五维度
 OUTPUT_STEP_1|先按固定纯文本输出，便于人工查看与复制到网页
 OUTPUT_STEP_1_FORMAT|SET=<问卷编号>;NAME=<称呼，可空>;MODEL=<模型，可空>;ANSWER=<答案串>;LENGTH=<长度>
-OUTPUT_STEP_2|再输出 RESULT_URL=<完整结果链接>，便于一键打开
-OUTPUT_NOTE|若无法可靠编码 n/m，可先保证 OUTPUT_STEP_1 正确，再尝试输出 RESULT_URL
+OUTPUT_STEP_2|再输出 RESULT_URL=<完整结果页链接>，便于浏览器一键打开
+OUTPUT_STEP_3|再输出 API_URL=<完整 GET 计分接口链接>（与 RESULT_URL 使用相同的 q、a、n、m 参数，仅路径为 /api/aiti-result）
+OUTPUT_NOTE|若无法可靠编码 n/m，可先保证 OUTPUT_STEP_1 与 API_URL 的 q、a 正确，再尽量输出 RESULT_URL
 RESULT_URL_EXAMPLE|https://thedecklab.com/aiti-result?q=49&a=<答案串>
-RESULT_URL_NOTE|最终结果链接 = baseUrl + RESULT_PATH；将<答案串>替换为你的作答结果，不要添加任何额外字符
+API_URL_EXAMPLE|https://thedecklab.com/api/aiti-result?q=49&a=<答案串>
+RESULT_URL_NOTE|结果页链接 = baseUrl + RESULT_PATH；将<答案串>替换为你的作答结果，不要添加任何额外字符
+API_URL_NOTE|计分接口链接 = baseUrl + API_PATH；参数名与结果页一致（q、a、n、m），不要省略必填的 q 与 a
 
 Q|01|R8M9vPZBq5|快考试了，学校规定必须上晚自习，请假会扣分，但今晚你约了女/男神一起玩《绝地求生：刺激战场》（一款刺激的游戏），你怎么办？|1=翘了！反正就一次！;2=干脆请个假吧。;3=都快考试了还去啥。
 Q|02|kNwBXbjunE|我渴望和我信任的人关系密切，熟得像失散多年的亲戚。|1=认同;2=中立;3=不认同
